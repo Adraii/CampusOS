@@ -231,3 +231,4 @@ switch ($page) {
         require dirname(__DIR__) . '/views/layouts/main.php';
         break;
 }
+

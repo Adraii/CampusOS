@@ -50,3 +50,4 @@ function getDBConnection(): ?PDO
         return null;
     }
 }
+
