@@ -116,3 +116,4 @@ Berdasarkan analisis kehidupan nyata mahasiswa, terdapat 3 kendala utama yang se
                      - Kuning : Pengeluaran 70% - 90% batas periode
                      - Merah  : Pengeluaran > 90% (Warning batas anggaran terlampaui)
 ```
+

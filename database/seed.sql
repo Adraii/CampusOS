@@ -85,3 +85,4 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `category`, `amount`, `tran
 (4, 1, 'expense', 'Pendidikan', 15000.00, '2026-11-08', 'Print dan jilid laporan pendahuluan praktikum', NOW());
 
 SET FOREIGN_KEY_CHECKS = 1;
+

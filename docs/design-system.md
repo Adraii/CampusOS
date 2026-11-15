@@ -158,3 +158,4 @@ Bagi pengembang yang mengekstraksi mockup desain dari Figma / FigCraft:
 3. **Cek Responsivitas:**
    - Gunakan layout fleksibel (`display: flex; gap: var(--space-4);`) atau `display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));`.
    - Pastikan viewport mobile (`< 768px`) tidak mengalami overflow horizontal.
+

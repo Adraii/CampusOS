@@ -237,3 +237,4 @@ $viewData = [
 ];
 ```
 Semua variabel koleksi wajib bernilai array kosong `[]` jika tidak ada rekaman data, sehingga View dapat langsung menggunakan helper `empty($todaySchedules)` untuk memicu *Empty State*.
+
