@@ -120,3 +120,4 @@ Untuk mencegah error `Undefined variable` atau `TypeError: foreach argument must
 
 3. **Status Notifikasi (Flash Messages):**
    - Pesan sukses/gagal dikirimkan melalui session flash (`$_SESSION['flash_success']`, `$_SESSION['flash_error']`) dan dibersihkan segera setelah dibaca oleh layout view.
+

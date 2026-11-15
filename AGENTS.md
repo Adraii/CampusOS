@@ -60,3 +60,4 @@ Setiap AI Coding Assistant wajib memvalidasi kodenya terhadap 7 aturan ini sebel
 Untuk aturan implementasi teknis lebih detail, rujuk dokumen berikut:
 - **Aturan Backend & Keamanan PHP:** [.agents/rules/backend-php.md](file:///.agents/rules/backend-php.md)
 - **Aturan Frontend, Styling, & UI:** [.agents/rules/frontend-ui.md](file:///.agents/rules/frontend-ui.md)
+

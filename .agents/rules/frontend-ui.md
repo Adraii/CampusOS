@@ -113,3 +113,4 @@ Antarmuka harus dapat diakses dengan nyaman baik pada layar desktop mahasiswa ma
   - Tablet/Laptop: `768px - 1024px`.
   - Desktop: `> 1024px` (Sidebar permanen, multi-kolom dashboard aktif).
 - Hindari penggunaan lebar tetap dalam satuan pixel (`width: 500px`) yang dapat memicu horizontal scrolling pada layar kecil. Gunakan `width: 100%`, `max-width`, atau `clamp()`.
+
