@@ -8,3 +8,4 @@ description: SOP wajib saat mengeksekusi batch pembuatan/perubahan file dan mela
 3. **Verifikasi Status Kerja:** Setelah semua file selesai ditulis, jalankan `git status -s` untuk memeriksa apakah masih ada file bertanda `M` (Modified) atau `??` (Untracked) yang relevan dengan tugas.
 4. **Staging Menyeluruh:** Gunakan `git add <daftar-file>` atau `git add .` (pastikan `config.local.php` tidak ikut masuk).
 5. **Commit & Push Tuntas:** Jalankan `git commit -m "<tipe>: <pesan singkat>"` diikuti `git push origin <nama-branch>` (atau `main`), lalu jalankan `git status` sekali lagi untuk memastikan outputnya `working tree clean`.
+

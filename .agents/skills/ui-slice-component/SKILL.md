@@ -8,3 +8,4 @@ Saat membantu Anggota 2 (Frontend) membuat halaman atau komponen visual:
 2. **Jangan Rusak Kontrak PHP:** Jika file `views/` sudah memiliki variabel PHP dari Backend, pertahankan nama variabel dan atribut `name="..."` pada elemen `<form>`.
 3. **State Lengkap:** Setiap halaman wajib menangani tampilan ketika data kosong (*Empty State*), tampilan normal, dan pesan umpan balik (*alert/toast* sukses atau gagal).
 4. **Responsif & Bersih:** Gunakan CSS Grid/Flexbox yang rapi, hindari penggunaan library CSS eksternal tanpa izin, dan jaga agar kode aman dibuka di desktop maupun mobile.
+

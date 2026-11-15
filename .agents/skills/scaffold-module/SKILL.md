@@ -18,3 +18,4 @@ Saat diminta membuat fitur atau modul baru (misal: Academic, Tasks, Calendar, Fi
    - Escape seluruh output dengan `htmlspecialchars($val, ENT_QUOTES, 'UTF-8')`.
    - Sediakan tampilan Empty State jika data kosong.
 5. **Daftarkan Route:** Tambahkan pemetaan halaman hanya pada switch/daftar rute di `public/index.php?page=<module>`. Jangan membuat folder `routes/` baru.
+

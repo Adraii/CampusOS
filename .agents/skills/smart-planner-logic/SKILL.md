@@ -11,3 +11,4 @@ Saat menulis kode di dalam `app/services/`:
    - Setiap rekomendasi wajib menyertakan string `reason` (alasan transparan mengapa tugas tersebut diprioritaskan dan mengapa slot waktu tersebut dipilih).
    - Dilarang mengubah jadwal tetap di database secara otomatis tanpa aksi persetujuan pengguna.
 4. **Aturan FinanceService:** Proyeksi saldo akhir periode harus menyertakan asumsi rata-rata pengeluaran harian secara eksplisit.
+
