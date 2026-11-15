@@ -1,16 +1,28 @@
-# Antigravity / Agent Workspace
-.agents/
-.gemini/
-
-# Environment & Credentials
+# Local Configuration & Secrets (JANGAN DI-COMMIT)
+app/config/config.local.php
 .env
-config.local.php
+.env.*
+!.env.example
 
-# Web Server & System Files
+# Antigravity / AI Cache & Local Session (Biarkan .agents/ dan AGENTS.md tetap ter-track)
+.gemini/
+.antigravity/
+*.aistate
+
+# Laragon, Apache & PHP Logs
 *.log
 error_log
+php_error.log
+
+# OS & Editor Junk
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/*
+!.vscode/settings.json
+.idea/
 
-# Dependencies (jika nanti pakai Composer)
+# Optional Dependencies / Backup
 /vendor/
+*.sql.gz
+*.bak
