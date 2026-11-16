@@ -190,22 +190,24 @@ switch ($page) {
 
         $moduleName = $titles[$page] ?? ucfirst($page);
 
-        // Placeholder view untuk modul yang sedang dalam tahap pengembangan
+        // Placeholder view untuk modul yang sedang dalam tahap pengembangan (Bento Grid Theme)
         $placeholderContent = "
-        <div class='page-header'>
-            <h1 class='page-title'>" . e($moduleName) . "</h1>
-            <p class='page-subtitle'>Modul ini siap dikembangkan pada tahapan berikutnya sesuai spesifikasi produk.</p>
-        </div>
-        <div class='card'>
-            <div class='card-body'>
-                <div class='empty-state'>
-                    <div class='empty-state-icon'>🛠️</div>
-                    <h3 class='empty-state-title'>Modul Segera Hadir</h3>
-                    <p class='empty-state-desc'>Struktur file, model PDO, controller, dan antarmuka untuk modul <strong>" . e($moduleName) . "</strong> akan diimplementasikan pada langkah pengerjaan modul fitur.</p>
-                    <a href='index.php?page=dashboard' class='btn btn-primary'>Kembali ke Dashboard</a>
-                </div>
+        <div class='canvas-top-bar'>
+            <div class='canvas-header'>
+                <h1 class='greeting-title'>" . e($moduleName) . "</h1>
+                <p class='greeting-subtitle'>Modul ini siap dikembangkan pada tahapan berikutnya sesuai spesifikasi produk.</p>
             </div>
         </div>
+        <article class='bento-card' style='margin-top: 20px; padding: 48px 24px; text-align: center;'>
+            <div style='font-size: 3rem; margin-bottom: 16px;'>🛠️</div>
+            <h2 class='card-heading-title' style='margin-bottom: 8px;'>Modul Segera Hadir</h2>
+            <p style='color: var(--color-text-muted); font-size: var(--font-size-sm); max-width: 460px; margin: 0 auto 24px;'>
+                Struktur file, model PDO, controller, dan antarmuka untuk modul <strong>" . e($moduleName) . "</strong> akan diimplementasikan pada langkah pengerjaan modul fitur.
+            </p>
+            <a href='index.php?page=dashboard' class='btn-lime' style='text-decoration: none;'>
+                Kembali ke Dashboard
+            </a>
+        </article>
         ";
 
         extract(['user' => currentUser(), 'pageTitle' => $moduleName . ' — CampusOS']);
@@ -216,16 +218,22 @@ switch ($page) {
     default:
         http_response_code(404);
         $placeholderContent = "
-        <div class='card'>
-            <div class='card-body'>
-                <div class='empty-state'>
-                    <div class='empty-state-icon'>🔍</div>
-                    <h3 class='empty-state-title'>404 — Halaman Tidak Ditemukan</h3>
-                    <p class='empty-state-desc'>Halaman yang Anda tuju tidak tersedia di CampusOS.</p>
-                    <a href='index.php?page=dashboard' class='btn btn-primary'>Kembali ke Dashboard</a>
-                </div>
+        <div class='canvas-top-bar'>
+            <div class='canvas-header'>
+                <h1 class='greeting-title'>404 — Halaman Tidak Ditemukan</h1>
+                <p class='greeting-subtitle'>Halaman yang Anda tuju tidak tersedia di CampusOS.</p>
             </div>
-        </div>";
+        </div>
+        <article class='bento-card' style='margin-top: 20px; padding: 48px 24px; text-align: center;'>
+            <div style='font-size: 3rem; margin-bottom: 16px;'>🔍</div>
+            <h2 class='card-heading-title' style='margin-bottom: 8px;'>Halaman Tidak Ditemukan</h2>
+            <p style='color: var(--color-text-muted); font-size: var(--font-size-sm); max-width: 420px; margin: 0 auto 24px;'>
+                Tautan yang Anda ikuti salah atau halaman telah dipindahkan.
+            </p>
+            <a href='index.php?page=dashboard' class='btn-lime' style='text-decoration: none;'>
+                Kembali ke Dashboard
+            </a>
+        </article>";
         extract(['user' => currentUser(), 'pageTitle' => '404 Not Found — CampusOS']);
         $contentView = $placeholderContent;
         require dirname(__DIR__) . '/views/layouts/main.php';
