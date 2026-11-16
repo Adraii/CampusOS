@@ -30,6 +30,10 @@ Setiap bagian kode memiliki tempatnya masing-masing. Jangan mencampuradukkan log
 | **Aturan & Konteks AI** | `.agents/`, `AGENTS.md` | Guardrails, panduan arsitektur, dan aturan pengerjaan kode. |
 | **Dokumentasi Teknis**| `docs/`, `README.md` | Dokumentasi spesifikasi, desain sistem, dan alur setup proyek. |
 
+### Pembagian Peran Anggota Tim:
+- **Anggota 1 (Adam Rafiq Arrasyid):** *UI/UX & Frontend* (FigCraft + Antigravity, Design System, HTML/CSS/JS di `views/` dan `public/assets/`, responsivitas & interaktivitas antarmuka).
+- **Anggota 2 (Fakhriy Mubarak):** *Backend & System Logic* (Database MySQL, Auth, Smart Planner Engine, Conflict Detection, Finance Calculation di `app/` dan `database/`).
+
 ---
 
 ## 3. 7 Hard Guardrails (Aturan Mutlak yang Dilarang Dilanggar)

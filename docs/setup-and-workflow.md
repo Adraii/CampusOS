@@ -73,8 +73,8 @@ Untuk menghindari tumpang-tindih (*merge conflict*), tanggung jawab berkas dibag
 
 | Anggota Tim | Peran Utama | Wilayah Direktori Eksklusif | Tanggung Jawab Utama |
 |---|---|---|---|
-| **Anggota 1** (Adam Rafiq) | *Backend & System Logic* | `app/controllers/`<br>`app/models/`<br>`app/services/`<br>`app/helpers/`<br>`database/` | Arsitektur MVC, query PDO berparameter, mesin Smart Planner deterministik, formula irisan waktu `ConflictService`, dan kalkulasi `FinanceService`. |
-| **Anggota 2** (Fakhriy Mubarak) | *UI/UX & Frontend* | `views/`<br>`public/assets/css/`<br>`public/assets/js/`<br>`public/assets/images/` | Slicing layout PHP Native (Hybrid SSR), penerapan CSS design tokens, responsivitas flex/grid, interaktivitas modal & filter, serta state tampilan kosong (*Empty State*). |
+| **Anggota 1** (Adam Rafiq Arrasyid) | *UI/UX & Frontend* | `views/`<br>`public/assets/css/`<br>`public/assets/js/`<br>`public/assets/images/` | FigCraft + Antigravity, Design System, slicing layout PHP Native (Hybrid SSR), penerapan CSS design tokens, responsivitas flex/grid, interaktivitas modal & filter, serta state tampilan kosong (*Empty State*). |
+| **Anggota 2** (Fakhriy Mubarak) | *Backend & System Logic* | `app/controllers/`<br>`app/models/`<br>`app/services/`<br>`app/helpers/`<br>`database/` | Database MySQL, autentikasi sesi, arsitektur MVC, query PDO berparameter, mesin Smart Planner deterministik, formula irisan waktu `ConflictService`, dan kalkulasi `FinanceService`. |
 
 > **Catatan Kerja Bersama:**  
 > Berkas `public/index.php` (routing utama) dan `README.md` dikelola bersama dengan komunikasi aktif sebelum pengubahan rute baru dilakukan.

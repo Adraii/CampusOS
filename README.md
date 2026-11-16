@@ -49,8 +49,8 @@
 
 Proyek ini dikembangkan dalam rangka pemenuhan tugas mata kuliah **Pemrograman Web**:
 
-- **Adam Rafiq Arrasyid** — *Backend & System Logic* (Arsitektur MVC, Database, Autentikasi, Smart Planner Engine, Conflict Detection, Finance Logic)
-- **Fakhriy Mubarak** — *UI/UX & Frontend* (Design System, Wireframing, Slicing HTML/CSS/JS, Hybrid Dashboard UI, Responsivitas & Interaktivitas)
+- **Adam Rafiq Arrasyid** — *UI/UX & Frontend* (FigCraft + Antigravity, Design System, Slicing HTML/CSS/JS di `views/` dan `public/assets/`, Hybrid Dashboard UI, Responsivitas & Interaktivitas)
+- **Fakhriy Mubarak** — *Backend & System Logic* (Database MySQL, Auth, Smart Planner Engine, Conflict Detection, Finance Calculation di `app/` dan `database/`)
 
 **Dosen Pengampu:**
 - **Vera Irma Delianti, M.Pd.T.**
@@ -71,6 +71,7 @@ CampusOS/
 │   └── services/         # Service layer (SmartPlannerService, ConflictService, FinanceService)
 ├── database/             # Skema basis data (schema.sql) dan data awal (seed.sql)
 ├── docs/                 # Dokumentasi komprehensif proyek
+│   ├── Gambar_UI.pdf     # Desain mockup antarmuka acuan dari dosen
 │   ├── architecture-and-db.md
 │   ├── design-system.md
 │   ├── product-spec.md
@@ -132,3 +133,4 @@ Untuk pemahaman arsitektur dan spesifikasi mendalam, silakan baca dokumentasi be
 2. [Architecture & Database Design (`docs/architecture-and-db.md`)](docs/architecture-and-db.md) — Arsitektur MVC + Service, query routing, kamus data, dan skema relasional database.
 3. [Design System & UI Guidelines (`docs/design-system.md`)](docs/design-system.md) — Palet warna, tipografi, token CSS, komponen visual, dan tata letak responsif.
 4. [Setup & Development Workflow (`docs/setup-and-workflow.md`)](docs/setup-and-workflow.md) — Panduan lingkungan Laragon, branching Git, standar commit, dan alur kontribusi tim.
+5. [Desain Mockup UI Dosen (`docs/Gambar_UI.pdf`)](docs/Gambar_UI.pdf) — Dokumen acuan desain mockup antarmuka wajib dari dosen pengampu.
