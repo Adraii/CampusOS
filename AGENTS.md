@@ -59,9 +59,11 @@ Setiap AI Coding Assistant wajib memvalidasi kodenya terhadap 7 aturan ini sebel
 
 ---
 
-## 4. Referensi Aturan Spesifik
+## 4. Referensi Aturan Spesifik & Skill AI
 
-Untuk aturan implementasi teknis lebih detail, rujuk dokumen berikut:
+Untuk aturan implementasi teknis dan panduan pengerjaan, rujuk dokumen berikut:
 - **Aturan Backend & Keamanan PHP:** [.agents/rules/backend-php.md](file:///.agents/rules/backend-php.md)
 - **Aturan Frontend, Styling, & UI:** [.agents/rules/frontend-ui.md](file:///.agents/rules/frontend-ui.md)
+- **Skill FigCraft Live Designer:** [.agents/skills/figcraft-live-designer/SKILL.md](file:///.agents/skills/figcraft-live-designer/SKILL.md)
+  - *Aturan Mutlak FigCraft:* Dilarang keras membuat skrip `.js` generator manual untuk menulis file `.figcraft` secara langsung (menghindari kanvas korup/kosong). Wajib gunakan MCP Server `figcraft` secara bertahap dari container luar ke dalam (progressive canvas drawing), lalu lakukan sinkronisasi eksplisit ke kode HTML/PHP, CSS (`tokens.css`, `layout.css`, `components.css`), dan JS (`ui.js`).
 

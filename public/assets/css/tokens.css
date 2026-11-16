@@ -1,0 +1,111 @@
+/**
+ * CampusOS — Design Tokens
+ * 100% Aligned with FigCraft Final Design & Eduplex Adaptation
+ */
+
+:root {
+  /* Brand Core Palette */
+  --color-brand-dark: #1A1B2E;        /* Deep Midnight Navy */
+  --color-brand-dark-card: #22243C;
+  --color-brand-lime: #D4F26A;        /* Electric Lime */
+  --color-brand-lime-hover: #c4e456;
+  --color-brand-dark-text: #18181B;
+
+  /* Pastel Accent Tokens */
+  --color-pastel-peach: #FDE6D8;
+  --color-pastel-peach-text: #C2410C;
+  --color-pastel-peach-icon: #D97706;
+
+  --color-pastel-lime: #EBF9B8;
+  --color-pastel-lime-text: #4D7C0F;
+
+  --color-pastel-lavender: #E5DFFF;
+  --color-pastel-lavender-text: #7E22CE;
+  --color-pastel-lavender-icon: #6C5CE7;
+
+  --color-pastel-mint: #E2F5EA;
+  --color-pastel-mint-text: #059669;
+
+  --color-pastel-rose: #FED7AA;
+  --color-pastel-rose-text: #C2410C;
+
+  /* Backgrounds & Surfaces */
+  --color-bg-page: #EBE9F5;           /* Soft lilac outer wallpaper */
+  --color-bg-canvas: #F6F6F8;         /* Warm Off-White Main Canvas */
+  --color-bg-card: #FFFFFF;
+  --color-bg-subtle: #F8FAFC;
+  --color-bg-muted: #F1F5F9;
+
+  /* Borders & Dividers */
+  --color-border-subtle: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Typography Colors */
+  --color-text-main: #1A1B2E;
+  --color-text-muted: #64748B;
+  --color-text-subtle: #94A3B8;
+  --color-text-inverse: #FFFFFF;
+  --color-sidebar-text: #C2C5DE;
+  --color-sidebar-icon: #8E92BC;
+
+  /* Typography Scale */
+  --font-family-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-size-2xs: 0.625rem; /* 10px */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.8125rem;  /* 13px */
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-md: 0.9375rem;  /* 15px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Border Radii */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-icon: 10px;
+  --radius-md: 12px;
+  --radius-pill: 14px;
+  --radius-card: 20px;
+  --radius-frame: 24px;
+  --radius-full: 9999px;
+
+  /* Dimensions */
+  --sidebar-width: 240px;
+  --right-panel-width: 320px;
+  --max-app-width: 1440px;
+  --min-app-height: 900px;
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 4px 12px rgba(26, 27, 46, 0.03);
+  --shadow-hover: 0 8px 24px rgba(26, 27, 46, 0.06);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* Dark Mode Tokens */
+[data-theme="dark"] {
+  --color-bg-page: #0D0E17;
+  --color-bg-canvas: #121324;
+  --color-bg-card: #1A1B2E;
+  --color-bg-subtle: #22243C;
+  --color-bg-muted: #252846;
+
+  --color-border-subtle: #2A2D4A;
+  --color-border-strong: #3A3E66;
+
+  --color-text-main: #F6F6F8;
+  --color-text-muted: #A0A5C2;
+  --color-text-subtle: #6D7396;
+
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
+}

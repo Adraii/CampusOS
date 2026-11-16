@@ -1,0 +1,346 @@
+/**
+ * CampusOS — Main Layout Architecture
+ * 3-Column Bento Grid Shell (Sidebar ~240px, Main Canvas ~880px, Right Panel ~320px)
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   DESKTOP DASHBOARD SHELL (1440 x 900)
+   ========================================================================== */
+
+.app-shell {
+  width: 100%;
+  max-width: var(--max-app-width);
+  min-height: var(--min-app-height);
+  background-color: var(--color-bg-canvas);
+  border-radius: var(--radius-frame);
+  box-shadow: 0 20px 40px rgba(26, 27, 46, 0.08);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  gap: 20px;
+}
+
+/* Mobile Drawer Overlay Backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(26, 27, 46, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.sidebar-backdrop.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ==========================================================================
+   1. KOLOM KIRI — SIDEBAR NAVIGASI (~240px, #1A1B2E)
+   ========================================================================== */
+
+.sidebar {
+  width: var(--sidebar-width);
+  background-color: var(--color-brand-dark);
+  border-radius: var(--radius-frame);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  flex-shrink: 0;
+  z-index: 50;
+  transition: transform var(--transition-normal);
+}
+
+/* ==========================================================================
+   2. KOLOM TENGAH — KANVAS UTAMA
+   ========================================================================== */
+
+.main-canvas {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 12px 6px;
+}
+
+/* Top Greeting Header */
+.canvas-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.canvas-top-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.canvas-top-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-reset-demo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-pill);
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-reset-demo:hover {
+  background-color: var(--color-bg-muted);
+  color: var(--color-text-main);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+
+.sidebar-collapse-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  color: var(--color-sidebar-text);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.sidebar-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.sidebar.is-collapsed {
+  width: 76px;
+  padding: 24px 10px;
+}
+
+.sidebar.is-collapsed .sidebar-brand-name,
+.sidebar.is-collapsed .nav-link span,
+.sidebar.is-collapsed .sidebar-focus-card .focus-deco-lines,
+.sidebar.is-collapsed .focus-card-pill {
+  display: none;
+}
+
+.sidebar.is-collapsed .sidebar-header {
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 0 20px;
+  gap: 8px;
+}
+
+.sidebar.is-collapsed .sidebar-collapse-btn {
+  margin-left: 0;
+  transform: rotate(180deg);
+}
+
+.sidebar.is-collapsed .nav-link {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar.is-collapsed .sidebar-focus-card {
+  padding: 10px;
+  align-items: center;
+}
+
+.sidebar.is-collapsed .focus-card-top {
+  justify-content: center;
+}
+
+.canvas-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.greeting-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+  letter-spacing: -0.02em;
+}
+
+.greeting-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+/* Baris 1: 3 Kartu Ringkasan Atas (Grid 3 Kolom Sejajar) */
+.summary-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Baris 2: Grid 2 Kolom Sejajar (Grafik Aktivitas & Jadwal Kuliah) */
+.middle-bento-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* Baris 3: Progres Target Semester (Full Width Card) */
+.semester-target-row {
+  width: 100%;
+}
+
+/* ==========================================================================
+   3. KOLOM KANAN — PANEL PENDUKUNG (~320px)
+   ========================================================================== */
+
+.right-panel {
+  width: var(--right-panel-width);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  padding: 8px 0;
+}
+
+/* Mobile Toggle Hamburger Button */
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-main);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 1380px) {
+  body {
+    padding: 12px;
+  }
+
+  .middle-bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    flex-direction: column;
+    min-height: auto;
+    border-radius: 0;
+    padding: 14px;
+  }
+
+  .right-panel {
+    width: 100%;
+  }
+
+  .summary-cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  body {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .app-shell {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+  }
+
+  .canvas-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
+    border-radius: 0;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .summary-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .greeting-title {
+    font-size: var(--font-size-xl);
+  }
+}

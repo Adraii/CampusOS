@@ -19,35 +19,41 @@ Antarmuka CampusOS dirancang dengan gaya **Modern Productivity Workspace** (bers
 
 ---
 
-## 2. Penggunaan Wajib CSS Variables (`public/assets/css/variables.css`)
+## 2. Penggunaan Wajib CSS Tokens & File Modular (`public/assets/css/`)
 
-Dilarang keras melakukan *hardcode* nilai warna hex, ukuran spasi, atau radius secara acak di file styling. Semua nilai harus merujuk ke CSS Custom Properties yang terdefinisi di `public/assets/css/variables.css`:
+Dilarang keras melakukan *hardcode* nilai warna hex, ukuran spasi, atau radius secara acak di file styling. Arsitektur CSS CampusOS dipisahkan secara modular:
+1. `public/assets/css/tokens.css`: Variabel desain terpusat (warna brand dark `#1A1B2E`, canvas `#F6F6F8`, accent lime `#D4F26A`, pastel badges, font `Plus Jakarta Sans`, radius `24px`/`20px`/`pill`).
+2. `public/assets/css/layout.css`: Tata letak makro 3-Column Bento Grid Shell (Sidebar `240px`, Kanvas Tengah `1fr`, Panel Kanan `320px`), header, drawer mobile, dan grid track.
+3. `public/assets/css/components.css`: Komponen kartu (`.card-bento`), tombol (`.btn-lime`, `.btn-icon`), badge pastel, modal dialog, empty states, dan alert notifications.
 
 ```css
 /* Contoh konsumsi token yang benar */
-.card-task {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-  box-shadow: var(--shadow-sm);
+.card-bento {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
 }
 
 .badge-urgent {
-  background-color: var(--color-danger-subtle);
-  color: var(--color-danger);
-  font-size: var(--text-xs);
-  font-weight: var(--font-semibold);
+  background-color: var(--color-pastel-peach);
+  color: var(--color-pastel-peach-text);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
 }
 ```
 
-### Palet Dasar Token yang Harus Tersedia:
-- **Warna Utama:** `--color-primary`, `--color-primary-hover`, `--color-primary-subtle`
-- **Warna Permukaan:** `--color-bg`, `--color-surface`, `--color-surface-hover`
-- **Warna Teks:** `--color-text-main`, `--color-text-muted`, `--color-text-inverted`
-- **Warna Status:** `--color-success`, `--color-warning`, `--color-danger`, `--color-info`
-- **Sistem Jarak (Spacing):** `--space-1` (4px), `--space-2` (8px), `--space-3` (12px), `--space-4` (16px), `--space-6` (24px), `--space-8` (32px)
-- **Border Radius:** `--radius-sm` (4px), `--radius-md` (8px), `--radius-lg` (12px), `--radius-full` (9999px)
+---
+
+## 3. Workflow Desain FigCraft (`figcraft-live-designer`)
+
+Setiap kali mendesain atau memperbarui antarmuka menggunakan FigCraft Desktop:
+1. **Dilarang Skrip Generator Manual:** Dilarang keras membuat skrip `.js` generator manual untuk menulis file `.figcraft` secara langsung (menghindari kanvas korup/putih kosong).
+2. **Wajib Gunakan MCP FigCraft:** Gunakan perintah MCP Server `figcraft` secara langsung dan bertahap dari container luar ke dalam (*progressive canvas drawing*):
+   - Frame Utama Desktop (`1440x900`) $\to$ Layout Kolom (Sidebar `240px`, Kanvas Tengah, Panel Kanan `320px`) $\to$ Kartu Bento $\to$ Tipografi & Ikon.
+3. **Verifikasi Visual:** Jalankan screenshot / inspect layer tree via MCP untuk memastikan kanvas terisi dengan presisi.
+4. **Sinkronisasi Eksplisit ke Kode:** Setelah mockup disetujui, terapkan secara konsisten ke HTML/PHP (`views/`), CSS modular (`tokens.css`, `layout.css`, `components.css`), dan interaktivitas JS (`ui.js`).
 
 ---
 
