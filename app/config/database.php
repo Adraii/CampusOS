@@ -26,7 +26,7 @@ function getDBConnection(): ?PDO
     }
 
     $config = require $configFile;
-    $db = $config['db'] ?? [];
+    $db = isset($config['db']) && is_array($config['db']) ? $config['db'] : $config;
 
     $host     = $db['host'] ?? '127.0.0.1';
     $dbname   = $db['dbname'] ?? 'campusos_db';
@@ -48,6 +48,16 @@ function getDBConnection(): ?PDO
     } catch (\PDOException $e) {
         error_log("Database Connection Failed: " . $e->getMessage());
         return null;
+    }
+}
+
+if (!class_exists('Database')) {
+    class Database
+    {
+        public static function getInstance(): ?PDO
+        {
+            return getDBConnection();
+        }
     }
 }
 
