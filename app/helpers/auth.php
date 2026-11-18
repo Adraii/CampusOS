@@ -39,6 +39,19 @@ function requireLogin(): void
 }
 
 /**
+ * Alias requireLogin untuk fleksibilitas pemanggilan controller
+ */
+function requireAuth(): void
+{
+    requireLogin();
+}
+
+function require_auth(): void
+{
+    requireLogin();
+}
+
+/**
  * Mendapatkan ID pengguna aktif saat ini
  * 
  * @return int|null

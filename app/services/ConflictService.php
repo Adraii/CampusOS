@@ -310,6 +310,37 @@ class ConflictService
                     ];
                 }
             }
+
+            // 2. Periksa bentrok terhadap agenda (events) pada hari yang sama
+            $stmtEvents = $this->db->prepare("
+                SELECT id, title, category, event_date, start_time, end_time, location
+                FROM events
+                WHERE user_id = :user_id
+                ORDER BY event_date ASC, start_time ASC
+            ");
+            $stmtEvents->execute([':user_id' => $userId]);
+            $events = $stmtEvents->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            foreach ($events as $event) {
+                $evDay = (int) date('N', strtotime($event['event_date']));
+                if ($evDay === $dayOfWeek) {
+                    $eventStart = self::normalizeTime($event['start_time']);
+                    $eventEnd   = self::normalizeTime($event['end_time']);
+
+                    if (self::hasOverlap($startTimeNorm, $endTimeNorm, $eventStart, $eventEnd)) {
+                        $conflicts[] = [
+                            'source'     => 'event',
+                            'id'         => (int) $event['id'],
+                            'title'      => $event['title'],
+                            'category'   => $event['category'],
+                            'event_date' => $event['event_date'],
+                            'start_time' => substr($eventStart, 0, 5),
+                            'end_time'   => substr($eventEnd, 0, 5),
+                            'message'    => "Bentrok dengan agenda '{$event['title']}' pada tanggal {$event['event_date']} pukul " . substr($eventStart, 0, 5) . " - " . substr($eventEnd, 0, 5),
+                        ];
+                    }
+                }
+            }
         } catch (\PDOException $e) {
             error_log("ConflictService::checkClassScheduleConflict Error: " . $e->getMessage());
         }

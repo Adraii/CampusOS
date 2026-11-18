@@ -174,6 +174,20 @@ switch ($page) {
         ]);
         break;
 
+    // Modul Akademik & Jadwal Kuliah (AcademicController)
+    case 'academic':
+        require_once __DIR__ . '/../app/controllers/AcademicController.php';
+        $academicController = new AcademicController();
+        $academicController->handleRequest($action);
+        break;
+
+    // Modul Kalender Kegiatan & Deteksi Konflik (CalendarController)
+    case 'calendar':
+        require_once __DIR__ . '/../app/controllers/CalendarController.php';
+        $calendarController = new CalendarController();
+        $calendarController->handleRequest($action);
+        break;
+
     // Modul Tugas & Prioritas (TaskController)
     case 'tasks':
         require_once __DIR__ . '/../app/controllers/TaskController.php';
@@ -188,42 +202,7 @@ switch ($page) {
         $taskController->planner();
         break;
 
-    // Modul Kalender & Konflik (Aksi deteksi bentrok & simpan agenda)
-    case 'calendar':
-        if (in_array($action, ['check_conflict', 'api_conflict', 'store_event'])) {
-            require_once __DIR__ . '/../app/controllers/TaskController.php';
-            $taskController = new TaskController();
-            $taskController->handleRequest($action);
-            break;
-        }
-        // Fallback placeholder kalender jika belum ada view kalender khusus
-        $titles = ['calendar' => 'Kalender Kegiatan & Deteksi Konflik'];
-        $moduleName = $titles['calendar'];
-        $placeholderContent = "
-        <div class='canvas-top-bar'>
-            <div class='canvas-header'>
-                <h1 class='greeting-title'>" . e($moduleName) . "</h1>
-                <p class='greeting-subtitle'>Modul kalender terintegrasi dengan mesin ConflictService untuk deteksi bentrok jadwal.</p>
-            </div>
-        </div>
-        <article class='bento-card' style='margin-top: 20px; padding: 48px 24px; text-align: center;'>
-            <div style='font-size: 3rem; margin-bottom: 16px;'>📅</div>
-            <h2 class='card-heading-title' style='margin-bottom: 8px;'>Kalender & Deteksi Konflik Aktif</h2>
-            <p style='color: var(--color-text-muted); font-size: var(--font-size-sm); max-width: 480px; margin: 0 auto 24px;'>
-                Layanan <strong>ConflictService</strong> dan model <strong>EventModel</strong> telah aktif di backend untuk mendeteksi bentrok jadwal kuliah dan agenda secara presisi.
-            </p>
-            <div style='display:flex; justify-content:center; gap:12px;'>
-                <a href='index.php?page=tasks' class='btn-lime' style='text-decoration: none;'>Lihat Daftar Tugas</a>
-                <a href='index.php?page=planner' class='filter-pill' style='text-decoration: none;'>Buka Smart Planner</a>
-            </div>
-        </article>";
-        extract(['user' => currentUser(), 'pageTitle' => $moduleName . ' — CampusOS']);
-        $contentView = $placeholderContent;
-        require dirname(__DIR__) . '/views/layouts/main.php';
-        break;
-
     // Modul yang akan di-scaffold pada tahap berikutnya
-    case 'academic':
     case 'finance':
         $titles = [
             'academic' => 'Manajemen Akademik & Jadwal Kuliah',

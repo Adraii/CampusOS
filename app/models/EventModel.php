@@ -222,6 +222,11 @@ class EventModel
         }
 
         try {
+            $existing = $this->getById($id, $userId);
+            if (!$existing) {
+                return false;
+            }
+
             $validCategories = ['personal', 'organization', 'study_session', 'exam'];
             $category = in_array($data['category'] ?? '', $validCategories) ? $data['category'] : 'personal';
 
@@ -278,6 +283,11 @@ class EventModel
         }
 
         try {
+            $existing = $this->getById($id, $userId);
+            if (!$existing) {
+                return false;
+            }
+
             $stmt = $this->db->prepare("DELETE FROM events WHERE id = :id AND user_id = :user_id");
             return $stmt->execute([
                 ':id'      => $id,

@@ -77,6 +77,16 @@ class TaskModel
                 $params[':search_desc'] = $searchWildcard;
             }
 
+            // Filter rentang tanggal deadline (untuk Kalender)
+            if (!empty($filters['start_date'])) {
+                $sql .= " AND t.deadline_date >= :start_date";
+                $params[':start_date'] = $filters['start_date'];
+            }
+            if (!empty($filters['end_date'])) {
+                $sql .= " AND t.deadline_date <= :end_date";
+                $params[':end_date'] = $filters['end_date'];
+            }
+
             // Urutan: tugas belum selesai didahulukan, diurutkan deadline terdekat
             $sql .= " ORDER BY (t.status = 'done') ASC, t.deadline_date ASC, t.deadline_time ASC, t.id DESC";
 
@@ -282,6 +292,11 @@ class TaskModel
         }
 
         try {
+            $existing = $this->getById($id, $userId);
+            if (!$existing) {
+                return false;
+            }
+
             $stmt = $this->db->prepare("
                 UPDATE tasks SET 
                     course_id       = :course_id,
@@ -341,6 +356,11 @@ class TaskModel
         }
 
         try {
+            $existing = $this->getById($id, $userId);
+            if (!$existing) {
+                return false;
+            }
+
             $stmt = $this->db->prepare("
                 UPDATE tasks 
                 SET status = :status 
@@ -372,6 +392,11 @@ class TaskModel
         }
 
         try {
+            $existing = $this->getById($id, $userId);
+            if (!$existing) {
+                return false;
+            }
+
             $stmt = $this->db->prepare("DELETE FROM tasks WHERE id = :id AND user_id = :user_id");
             return $stmt->execute([
                 ':id'      => $id,
