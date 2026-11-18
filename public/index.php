@@ -95,83 +95,11 @@ if ($page === 'logout') {
 requireLogin();
 
 switch ($page) {
+    // Modul Dashboard Utama (DashboardController)
     case 'dashboard':
-        $userId = currentUserId();
-        $pdo = getDBConnection();
-
-        $todaySchedules = [];
-        $urgentTasks = [];
-        $walletSummary = [
-            'monthlyBudget'   => 1500000.0,
-            'totalExpense'    => 125000.0,
-            'remainingBudget' => 1375000.0,
-            'percentUsed'     => 8.3,
-            'statusBadge'     => 'success',
-        ];
-
-        // Jika koneksi DB aktif, baca data nyata
-        if ($pdo && $userId) {
-            try {
-                // Jadwal hari ini (hari 1-7, PHP date('N') return 1=Senin s/d 7=Minggu)
-                $dayOfWeek = (int) date('N');
-                $stmtSched = $pdo->prepare("
-                    SELECT cs.*, c.course_code, c.course_name, c.color_hex
-                    FROM class_schedules cs
-                    JOIN courses c ON cs.course_id = c.id
-                    WHERE cs.user_id = :user_id AND cs.day_of_week = :day_of_week
-                    ORDER BY cs.start_time ASC
-                ");
-                $stmtSched->execute([':user_id' => $userId, ':day_of_week' => $dayOfWeek]);
-                $todaySchedules = $stmtSched->fetchAll() ?: [];
-
-                // Tugas mendesak (belum selesai, diurutkan deadline terdekat)
-                $stmtTask = $pdo->prepare("
-                    SELECT * FROM tasks
-                    WHERE user_id = :user_id AND status != 'done'
-                    ORDER BY deadline_date ASC, deadline_time ASC
-                    LIMIT 3
-                ");
-                $stmtTask->execute([':user_id' => $userId]);
-                $urgentTasks = $stmtTask->fetchAll() ?: [];
-
-                // Pengaturan budget dan transaksi
-                $stmtBudget = $pdo->prepare("SELECT * FROM budget_settings WHERE user_id = :user_id LIMIT 1");
-                $stmtBudget->execute([':user_id' => $userId]);
-                $budgetRow = $stmtBudget->fetch();
-                $monthlyBudget = $budgetRow ? (float) $budgetRow['monthly_budget'] : 1500000.0;
-
-                $stmtExpense = $pdo->prepare("
-                    SELECT SUM(amount) as total 
-                    FROM transactions 
-                    WHERE user_id = :user_id AND type = 'expense'
-                ");
-                $stmtExpense->execute([':user_id' => $userId]);
-                $expenseRow = $stmtExpense->fetch();
-                $totalExpense = $expenseRow && $expenseRow['total'] ? (float) $expenseRow['total'] : 0.0;
-
-                $remaining = max(0, $monthlyBudget - $totalExpense);
-                $percent = $monthlyBudget > 0 ? ($totalExpense / $monthlyBudget) * 100 : 0;
-                $statusBadge = $percent > 90 ? 'danger' : ($percent > 70 ? 'warning' : 'success');
-
-                $walletSummary = [
-                    'monthlyBudget'   => $monthlyBudget,
-                    'totalExpense'    => $totalExpense,
-                    'remainingBudget' => $remaining,
-                    'percentUsed'     => $percent,
-                    'statusBadge'     => $statusBadge,
-                ];
-            } catch (\PDOException $e) {
-                error_log("Dashboard Data Fetch Error: " . $e->getMessage());
-            }
-        }
-
-        renderView('dashboard/index', [
-            'pageTitle'      => 'Dashboard Overview — CampusOS',
-            'user'           => currentUser(),
-            'todaySchedules' => $todaySchedules,
-            'urgentTasks'    => $urgentTasks,
-            'walletSummary'  => $walletSummary,
-        ]);
+        require_once __DIR__ . '/../app/controllers/DashboardController.php';
+        $dashboardController = new DashboardController();
+        $dashboardController->index();
         break;
 
     // Modul Akademik & Jadwal Kuliah (AcademicController)
@@ -202,41 +130,11 @@ switch ($page) {
         $taskController->planner();
         break;
 
-    // Modul yang akan di-scaffold pada tahap berikutnya
+    // Modul Pengelolaan Keuangan Mahasiswa (FinanceController)
     case 'finance':
-        $titles = [
-            'academic' => 'Manajemen Akademik & Jadwal Kuliah',
-            'calendar' => 'Kalender Kegiatan & Deteksi Konflik',
-            'tasks'    => 'Manajemen Tugas & Prioritas',
-            'planner'  => 'Smart Planner (Rekomendasi Belajar)',
-            'finance'  => 'Pengelolaan Keuangan Pribadi Mahasiswa',
-        ];
-
-        $moduleName = $titles[$page] ?? ucfirst($page);
-
-        // Placeholder view untuk modul yang sedang dalam tahap pengembangan (Bento Grid Theme)
-        $placeholderContent = "
-        <div class='canvas-top-bar'>
-            <div class='canvas-header'>
-                <h1 class='greeting-title'>" . e($moduleName) . "</h1>
-                <p class='greeting-subtitle'>Modul ini siap dikembangkan pada tahapan berikutnya sesuai spesifikasi produk.</p>
-            </div>
-        </div>
-        <article class='bento-card' style='margin-top: 20px; padding: 48px 24px; text-align: center;'>
-            <div style='font-size: 3rem; margin-bottom: 16px;'>🛠️</div>
-            <h2 class='card-heading-title' style='margin-bottom: 8px;'>Modul Segera Hadir</h2>
-            <p style='color: var(--color-text-muted); font-size: var(--font-size-sm); max-width: 460px; margin: 0 auto 24px;'>
-                Struktur file, model PDO, controller, dan antarmuka untuk modul <strong>" . e($moduleName) . "</strong> akan diimplementasikan pada langkah pengerjaan modul fitur.
-            </p>
-            <a href='index.php?page=dashboard' class='btn-lime' style='text-decoration: none;'>
-                Kembali ke Dashboard
-            </a>
-        </article>
-        ";
-
-        extract(['user' => currentUser(), 'pageTitle' => $moduleName . ' — CampusOS']);
-        $contentView = $placeholderContent;
-        require dirname(__DIR__) . '/views/layouts/main.php';
+        require_once __DIR__ . '/../app/controllers/FinanceController.php';
+        $financeController = new FinanceController();
+        $financeController->handleRequest($action);
         break;
 
     default:
