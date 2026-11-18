@@ -1,331 +1,337 @@
 <?php
 /**
  * views/dashboard/index.php
- * Tampilan Utama Bento Grid Dashboard CampusOS (Hybrid SSR)
- * Terintegrasi penuh dengan Design System FigCraft & data dinamis PHP
+ * Dashboard Overview — Technical High-Contrast Dark Bento (Hybrid SSR)
+ * Sinkronisasi visual dengan Artboard 1 di docs/CampusOS-Dashboard.figcraft
  */
 
-$user = currentUser();
-$scheduleCount = !empty($todaySchedules) ? count($todaySchedules) : 3;
-$taskCount = !empty($urgentTasks) ? count($urgentTasks) : 4;
-$remainingBudget = isset($walletSummary['remainingBudget']) ? (float)$walletSummary['remainingBudget'] : 450000;
-$spentBudget = isset($walletSummary['totalExpense']) ? (float)$walletSummary['totalExpense'] : 150000;
-$budgetStatus = isset($walletSummary['statusBadge']) 
-    ? ($walletSummary['statusBadge'] === 'danger' ? 'Kritis' : ($walletSummary['statusBadge'] === 'warning' ? 'Waspada' : 'Aman')) 
-    : 'Aman';
+$todaySchedules = $todaySchedules ?? [];
+$urgentTasks = $urgentTasks ?? [];
+$plannerRecommendations = $plannerRecommendations ?? [];
+$walletSummary = $walletSummary ?? [
+    'monthlyBudget'   => 1500000.0,
+    'totalExpense'    => 125000.0,
+    'remainingBudget' => 1375000.0,
+    'percentUsed'     => 8.3,
+    'statusBadge'     => 'success',
+];
 
-$earliestSession = '08.00 WIB';
-if (!empty($todaySchedules) && isset($todaySchedules[0]['start_time'])) {
-    $earliestSession = substr($todaySchedules[0]['start_time'], 0, 5) . ' WIB';
+$activeTaskCount = count($urgentTasks);
+$highPriorityCount = 0;
+$totalEstimatedHours = 0.0;
+foreach ($urgentTasks as $t) {
+    if (($t['priority'] ?? '') === 'high') {
+        $highPriorityCount++;
+    }
+    $totalEstimatedHours += (float) ($t['estimated_hours'] ?? 2.0);
 }
+
+$monthlyBudget = (float) ($walletSummary['monthlyBudget'] ?? 1500000);
+$remainingBudget = (float) ($walletSummary['remainingBudget'] ?? 0);
+$percentUsed = (float) ($walletSummary['percentUsed'] ?? 0);
+$percentRemaining = max(0, min(100, 100 - $percentUsed));
+$budgetStatus = $walletSummary['statusBadge'] ?? 'success';
+$budgetStatusLabel = $budgetStatus === 'danger' ? 'Kritis' : ($budgetStatus === 'warning' ? 'Waspada' : 'Aman');
+
+// Data grafik mingguan bersih (Sen-Min)
+$weeklyStudyBars = [
+    ['short' => 'Sen', 'full' => 'Senin',  'hours' => 3.5, 'pct' => 54, 'tone' => 'muted'],
+    ['short' => 'Sel', 'full' => 'Selasa', 'hours' => 5.0, 'pct' => 76, 'tone' => 'lime'],
+    ['short' => 'Rab', 'full' => 'Rabu',   'hours' => 6.2, 'pct' => 94, 'tone' => 'lime', 'active' => true],
+    ['short' => 'Kam', 'full' => 'Kamis',  'hours' => 4.0, 'pct' => 62, 'tone' => 'muted'],
+    ['short' => 'Jum', 'full' => 'Jumat',  'hours' => 2.8, 'pct' => 44, 'tone' => 'orange'],
+    ['short' => 'Sab', 'full' => 'Sabtu',  'hours' => 4.5, 'pct' => 68, 'tone' => 'muted'],
+    ['short' => 'Min', 'full' => 'Minggu', 'hours' => 5.4, 'pct' => 82, 'tone' => 'lime'],
+];
+
+// Ambil 1 rekomendasi utama untuk preview di Dashboard
+$topRec = $plannerRecommendations[0] ?? null;
+$topUrgentTask = $urgentTasks[0] ?? null;
 ?>
 
-<!-- Top Greeting Header & Action Group -->
-<div class="canvas-top-bar">
-  <div class="canvas-top-left">
-    <button type="button" class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Buka Menu Navigasi" title="Menu">
-      <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
-      </svg>
-    </button>
-
-    <header class="canvas-header">
-      <h1 class="greeting-title" id="greetingTitle">Selamat datang kembali, <?= e($user['name'] ?? 'Mahasiswa') ?> 👋</h1>
-      <p class="greeting-subtitle" id="greetingSubtitle"><?= date('l, d F Y') ?> • <?= $scheduleCount ?> Mata Kuliah &amp; <?= $taskCount ?> Deadline Menunggu</p>
-    </header>
-  </div>
-
-  <div class="canvas-top-right">
-    <button type="button" class="btn-reset-demo" id="resetDemoBtn" title="Kembalikan data demo awal">
-      <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24" aria-hidden="true">
-        <polyline points="23 4 23 10 17 10"></polyline>
-        <polyline points="1 20 1 14 7 14"></polyline>
-        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-      </svg>
-      <span>Reset Demo</span>
-    </button>
-  </div>
-</div>
-
-<!-- Baris 1: 3 Kartu Ringkasan Atas (Grid 3 Kolom Sejajar) -->
-<section class="summary-cards-grid" aria-label="Ringkasan Status Perkuliahan">
-  
-  <!-- Kartu 1: Jadwal Kuliah Hari Ini (#FDE6D8 Peach) -->
-  <article class="summary-card" data-module="next-class">
-    <div class="summary-card-header">
-      <div class="summary-icon-box peach" aria-hidden="true">
-        <svg class="ui-icon" viewBox="0 0 24 24">
+<!-- ========================================================================
+     ROW 1: 4 METRIC KPI CARDS
+     ======================================================================== -->
+<section class="kpi-grid-4" aria-label="Ringkasan Metrik Utama Mahasiswa">
+  <!-- KPI 1: SKS Semester -->
+  <article class="kpi-card">
+    <div class="kpi-top">
+      <span class="kpi-label">SKS Semester Ini</span>
+      <span class="kpi-icon-dot is-lime" aria-hidden="true">
+        <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
         </svg>
-      </div>
-      <div class="summary-title-group">
-        <h2 class="summary-main-title" id="summaryNextClassTitle"><?= $scheduleCount ?> Mata Kuliah</h2>
-        <span class="summary-subtitle" id="summaryNextClassSubtitle">Jadwal Kuliah Hari Ini</span>
-      </div>
+      </span>
     </div>
-    <div class="summary-card-meta">
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">STATUS</span>
-        <span class="summary-meta-val">Aktif Semester <?= e($user['semester'] ?? 5) ?></span>
-      </div>
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">SESI TERDEKAT</span>
-        <span class="summary-meta-val" id="summaryNextClassSession"><?= e($earliestSession) ?></span>
-      </div>
+    <div class="kpi-value">21 SKS</div>
+    <div class="kpi-footer">
+      <span class="pill pill-lime">Semester <?= e($user['semester'] ?? 3) ?> Aktif</span>
+      <span><?= count($todaySchedules) ?> kuliah hari ini</span>
     </div>
   </article>
 
-  <!-- Kartu 2: Tugas Aktif (#EBF9B8 Lime) -->
-  <article class="summary-card" data-module="priority-tasks">
-    <div class="summary-card-header">
-      <div class="summary-icon-box lime" aria-hidden="true">
-        <svg class="ui-icon" viewBox="0 0 24 24">
-          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+  <!-- KPI 2: Tugas Aktif -->
+  <article class="kpi-card">
+    <div class="kpi-top">
+      <span class="kpi-label">Tugas Aktif</span>
+      <span class="kpi-icon-dot is-orange" aria-hidden="true">
+        <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
         </svg>
-      </div>
-      <div class="summary-title-group">
-        <h2 class="summary-main-title"><span id="summaryTasksCount"><?= $taskCount ?></span> Tugas Aktif</h2>
-        <span class="summary-subtitle"><span id="summaryTasksWarning">2</span> Mendekati Deadline</span>
-      </div>
+      </span>
     </div>
-    <div class="summary-card-meta">
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">SELESAI</span>
-        <span class="summary-meta-val" id="summaryTasksDoneVal">12 Tugas</span>
-      </div>
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">PRIORITAS</span>
-        <span class="summary-meta-val text-warning" id="summaryTasksPriorityVal">Tinggi (2)</span>
-      </div>
+    <div class="kpi-value"><?= $activeTaskCount ?> Tugas</div>
+    <div class="kpi-footer">
+      <span class="pill pill-orange"><?= $highPriorityCount ?> Prioritas Tinggi</span>
+      <a href="index.php?page=tasks" style="font-size: var(--font-size-xs);">Kelola &rarr;</a>
     </div>
   </article>
 
-  <!-- Kartu 3: Anggaran Kuliah (#E5DFFF Lavender) -->
-  <article class="summary-card" data-module="expense-summary">
-    <div class="summary-card-header">
-      <div class="summary-icon-box lavender" aria-hidden="true">
-        <svg class="ui-icon" viewBox="0 0 24 24">
+  <!-- KPI 3: Beban Estimasi Smart Planner -->
+  <article class="kpi-card">
+    <div class="kpi-top">
+      <span class="kpi-label">Beban Studi Aktif</span>
+      <span class="kpi-icon-dot is-lime" aria-hidden="true">
+        <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+      </span>
+    </div>
+    <div class="kpi-value is-lime"><?= number_format($totalEstimatedHours, 1) ?> Jam</div>
+    <div class="kpi-footer">
+      <span>Estimasi tugas aktif</span>
+      <a href="index.php?page=planner" style="font-size: var(--font-size-xs);">Atur Slot &rarr;</a>
+    </div>
+  </article>
+
+  <!-- KPI 4: Sisa Anggaran Bulanan -->
+  <article class="kpi-card">
+    <div class="kpi-top">
+      <span class="kpi-label">Sisa Anggaran Bulan Ini</span>
+      <span class="kpi-icon-dot" aria-hidden="true">
+        <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24">
           <rect x="2" y="4" width="20" height="16" rx="2"></rect>
           <line x1="2" y1="10" x2="22" y2="10"></line>
         </svg>
-      </div>
-      <div class="summary-title-group">
-        <h2 class="summary-main-title" id="summaryRemainingBudget">Rp <?= number_format($remainingBudget, 0, ',', '.') ?></h2>
-        <span class="summary-subtitle">Sisa Anggaran Minggu Ini</span>
-      </div>
+      </span>
     </div>
-    <div class="summary-card-meta">
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">TERPAKAI</span>
-        <span class="summary-meta-val" id="summarySpentBudget">Rp <?= number_format($spentBudget, 0, ',', '.') ?></span>
+    <div class="kpi-value is-compact">Rp <?= number_format($remainingBudget, 0, ',', '.') ?></div>
+    <div>
+      <div class="kpi-progress-track">
+        <div class="kpi-progress-fill <?= $budgetStatus === 'danger' ? 'is-danger' : ($budgetStatus === 'warning' ? 'is-warning' : '') ?>" style="width: <?= round($percentRemaining) ?>%;"></div>
       </div>
-      <div class="summary-meta-item">
-        <span class="summary-meta-label">STATUS</span>
-        <span class="summary-meta-val text-<?= $budgetStatus === 'Aman' ? 'success' : 'warning' ?>" id="summaryBudgetStatus"><?= e($budgetStatus) ?></span>
+      <div class="kpi-footer">
+        <span>Terpakai <?= number_format($percentUsed, 1) ?>%</span>
+        <span class="<?= $budgetStatus === 'danger' ? 'pill pill-danger' : ($budgetStatus === 'warning' ? 'pill pill-orange' : 'pill pill-lime') ?>"><?= e($budgetStatusLabel) ?></span>
       </div>
     </div>
   </article>
 </section>
 
-<!-- Baris 2: Grid 2 Kolom Sejajar (Grafik Aktivitas & Jadwal Kuliah) -->
-<section class="middle-bento-grid" aria-label="Aktivitas dan Jadwal">
-  
-  <!-- Kiri: Grafik Aktivitas Belajar Mingguan (7 Batang) -->
-  <article class="bento-card" data-module="activity-chart">
+<!-- ========================================================================
+     ROW 2: BAR CHART MINGGUAN + HORIZONTAL TIMELINE PENUGASAN
+     ======================================================================== -->
+<section class="bento-grid-split" aria-label="Analitik Mingguan dan Timeline Tugas">
+  <!-- Kiri: Beban Belajar Mingguan (Clean CSS Vertical Bar Chart) -->
+  <article class="bento-card">
     <div class="card-header-row">
       <div class="card-heading-group">
-        <h2 class="card-heading-title">Aktivitas Mingguan</h2>
-        <span class="card-growth-tag">↗ +18% lebih produktif dari minggu lalu</span>
+        <h2 class="card-heading-title">Beban Belajar Mingguan</h2>
+        <span class="card-growth-tag" id="chartActiveSummary">Rabu: 6.2 jam sesi belajar &amp; kuliah</span>
       </div>
-      <button type="button" class="filter-pill" id="chartFilterBtn" aria-label="Pilih Periode Grafik">
-        <span>Mingguan</span>
-        <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24" aria-hidden="true">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
+      <span class="pill pill-neutral">7 Hari Terakhir</span>
     </div>
 
-    <div class="chart-container" aria-label="Grafik jam belajar dan pengeluaran harian">
-      <!-- Grid Lines -->
-      <div class="chart-grid-guides" aria-hidden="true">
-        <div class="chart-guide-line"></div>
-        <div class="chart-guide-line"></div>
-        <div class="chart-guide-line"></div>
-        <div class="chart-guide-line"></div>
-        <div class="chart-guide-line"></div>
+    <div class="bar-chart-wrap" aria-label="Grafik jam belajar harian">
+      <div class="bar-chart-grid">
+        <?php foreach ($weeklyStudyBars as $bar): ?>
+          <div
+            class="bar-col <?= !empty($bar['active']) ? 'is-active' : '' ?>"
+            data-day-label="<?= e($bar['full']) ?>"
+            data-hours="<?= e($bar['hours']) ?>"
+            title="<?= e($bar['full']) ?>: <?= e($bar['hours']) ?> jam"
+          >
+            <span class="bar-val-hint"><?= e($bar['hours']) ?>j</span>
+            <div
+              class="bar-pill <?= $bar['tone'] === 'lime' ? 'is-lime' : ($bar['tone'] === 'orange' ? 'is-orange' : '') ?>"
+              style="height: <?= (int) $bar['pct'] ?>%;"
+            ></div>
+          </div>
+        <?php endforeach; ?>
       </div>
 
-      <!-- Y Axis Labels -->
-      <div class="chart-y-axis" aria-hidden="true">
-        <span>8j</span>
-        <span>6j</span>
-        <span>4j</span>
-        <span>2j</span>
-        <span>0j</span>
-      </div>
-
-      <!-- Vertical Bar Columns Track (Interaktif via ui.js) -->
-      <div class="chart-bars-track" id="chartBarsTrack">
-        <!-- Rendered via ui.js dynamically -->
-      </div>
-
-      <!-- X Axis Day Labels -->
-      <div class="chart-x-labels" id="chartXLabels" aria-hidden="true">
-        <span class="x-label" data-index="0">Min</span>
-        <span class="x-label" data-index="1">Sen</span>
-        <span class="x-label" data-index="2">Sel</span>
-        <span class="x-label is-active" data-index="3">Rab</span>
-        <span class="x-label" data-index="4">Kam</span>
-        <span class="x-label" data-index="5">Jum</span>
-        <span class="x-label" data-index="6">Sab</span>
+      <div class="bar-chart-labels" aria-hidden="true">
+        <?php foreach ($weeklyStudyBars as $bar): ?>
+          <span class="bar-day-label <?= $bar['tone'] === 'lime' ? 'is-lime' : ($bar['tone'] === 'orange' ? 'is-orange' : '') ?>">
+            <?= e($bar['short']) ?>
+          </span>
+        <?php endforeach; ?>
       </div>
     </div>
   </article>
 
-  <!-- Kanan: Jadwal Kuliah Hari Ini -->
-  <article class="bento-card" data-module="daily-schedule">
+  <!-- Kanan: Timeline Penugasan & Kuis (Horizontal Pill Bars) -->
+  <article class="bento-card">
     <div class="card-header-row">
-      <h2 class="card-heading-title">Jadwal Kuliah Hari Ini</h2>
-      <a href="index.php?page=academic" class="summary-subtitle" id="viewAllScheduleLink">Lihat Semua</a>
+      <div class="card-heading-group">
+        <h2 class="card-heading-title">Timeline Penugasan &amp; Kuis</h2>
+        <span class="card-heading-sub">Estimasi durasi &amp; kedekatan tenggat waktu</span>
+      </div>
+      <a href="index.php?page=tasks" class="btn-secondary btn-sm">Semua Tugas</a>
     </div>
 
-    <div class="schedule-list" id="scheduleList">
-      <!-- Rendered via ui.js dynamically -->
-    </div>
+    <?php if (empty($urgentTasks)): ?>
+      <div class="empty-state" style="padding: 28px 12px;">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg class="ui-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <h3 class="empty-state-title">Semua Tugas Tuntas!</h3>
+        <p class="empty-state-desc">Tidak ada tugas aktif yang mendekati deadline saat ini.</p>
+        <button type="button" class="btn-lime btn-sm" data-open-modal="quickTaskModal">+ Tambah Tugas Baru</button>
+      </div>
+    <?php else: ?>
+      <div class="timeline-list">
+        <?php foreach ($urgentTasks as $idx => $task):
+          $hours = (float) ($task['estimated_hours'] ?? 2.0);
+          $widthPct = max(24, min(92, (int) round(($hours / 8.0) * 100)));
+          $offsetPct = min(100 - $widthPct, $idx * 10);
+          $prio = strtolower($task['priority'] ?? 'medium');
+          $pillTone = $prio === 'high' ? 'is-orange' : ($prio === 'medium' ? '' : 'is-muted');
+        ?>
+          <div class="timeline-row">
+            <div class="timeline-head">
+              <span class="timeline-title"><?= e($task['title']) ?></span>
+              <span class="timeline-meta">
+                <?= date('d M', strtotime($task['deadline_date'])) ?> • <?= number_format($hours, 1) ?>j
+              </span>
+            </div>
+            <div class="timeline-track">
+              <div
+                class="timeline-pill <?= $pillTone ?>"
+                style="width: <?= $widthPct ?>%; margin-left: <?= $offsetPct ?>%;"
+              ></div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
   </article>
 </section>
 
-<!-- Baris 3: Progres Target Semester (Card Horizontal dengan Ring Chart) -->
-<section class="semester-target-row" aria-label="Progres Target Semester">
-  <article class="semester-card" data-module="semester-progress">
+<!-- ========================================================================
+     ROW 3: JADWAL KULIAH HARI INI + REKOMENDASI SMART PLANNER
+     ======================================================================== -->
+<section class="bento-grid-2" aria-label="Jadwal Hari Ini dan Rekomendasi Smart Planner">
+  <!-- Kiri: Jadwal Kuliah Hari Ini -->
+  <article class="bento-card">
     <div class="card-header-row">
-      <h2 class="card-heading-title">Target Semester &amp; Mata Kuliah</h2>
-      <div class="semester-header-actions">
-        <button type="button" class="filter-pill" id="semesterFilterBtn">
-          <span>Semester <?= e($user['semester'] ?? 5) ?> (Ganjil)</span>
-          <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24" aria-hidden="true">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        <a href="index.php?page=academic" class="btn-circle-add" id="addTargetBtn" aria-label="Tambah Target Mata Kuliah" title="Tambah Target">+</a>
+      <div class="card-heading-group">
+        <h2 class="card-heading-title">Jadwal Kuliah Hari Ini</h2>
+        <span class="card-heading-sub">Jadwal tetap mingguan (tidak pernah ditimpa Smart Planner)</span>
       </div>
+      <a href="index.php?page=academic" class="btn-secondary btn-sm">Lihat Semua</a>
     </div>
 
-    <div class="target-course-rows">
-      <!-- Row 1: Pemrograman Web Modern (45% Emerald Ring) -->
-      <div class="target-row">
-        <div class="target-left-group">
-          <div class="target-icon-box lavender" aria-hidden="true">
-            <svg class="ui-icon" viewBox="0 0 24 24">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-          </div>
-          <div class="target-detail-group">
-            <span class="target-course-name">Pemrograman Web Modern</span>
-            <span class="target-lecturer">Vera Irma Delianti, M.Pd.T.</span>
-          </div>
-        </div>
-        <div class="target-mid-meta">
-          <span class="target-meta-label">SISA MATERI</span>
-          <span class="target-meta-value">4 Modul • 8 Jam</span>
-        </div>
-        <div class="ring-progress-wrapper" aria-label="Progres 45%">
-          <svg class="ring-progress-svg" viewBox="0 0 40 40">
-            <circle class="ring-bg" cx="20" cy="20" r="16"></circle>
-            <circle class="ring-val emerald pct-45" cx="20" cy="20" r="16"></circle>
+    <?php if (empty($todaySchedules)): ?>
+      <div class="empty-state" style="padding: 32px 12px;">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg class="ui-icon" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
-          <span class="ring-pct-text">45%</span>
         </div>
+        <h3 class="empty-state-title">Tidak Ada Jadwal Kuliah Hari Ini</h3>
+        <p class="empty-state-desc">Hari ini bebas jadwal kuliah rutin. Kamu bisa fokus menyelesaikan tugas melalui Smart Planner.</p>
+        <a href="index.php?page=planner" class="btn-lime btn-sm">Lihat Rekomendasi Belajar</a>
       </div>
+    <?php else: ?>
+      <div class="schedule-list">
+        <?php
+        $accentColors = ['var(--accent-lime)', 'var(--accent-orange)', 'var(--accent-cyan)'];
+        foreach ($todaySchedules as $i => $sched):
+          $barColor = !empty($sched['color_hex']) ? $sched['color_hex'] : $accentColors[$i % 3];
+        ?>
+          <div class="schedule-item">
+            <div class="schedule-left">
+              <span class="schedule-accent" style="background-color: <?= e($barColor) ?>;"></span>
+              <div class="schedule-info">
+                <span class="schedule-course"><?= e($sched['course_name'] ?? 'Mata Kuliah') ?></span>
+                <span class="schedule-meta">
+                  <?= e($sched['course_code'] ?? '') ?><?= !empty($sched['room']) ? ' • ' . e($sched['room']) : '' ?>
+                </span>
+              </div>
+            </div>
+            <span class="schedule-time-pill">
+              <?= e(substr($sched['start_time'], 0, 5)) ?> - <?= e(substr($sched['end_time'], 0, 5)) ?>
+            </span>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  </article>
 
-      <!-- Row 2: Sistem Basis Data Relasional (75% Indigo Ring) -->
-      <div class="target-row">
-        <div class="target-left-group">
-          <div class="target-icon-box peach" aria-hidden="true">
-            <svg class="ui-icon" viewBox="0 0 24 24">
-              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
-              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
-              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
-            </svg>
-          </div>
-          <div class="target-detail-group">
-            <span class="target-course-name">Sistem Basis Data Relasional</span>
-            <span class="target-lecturer">Ahmad Fauzi, M.Kom.</span>
-          </div>
-        </div>
-        <div class="target-mid-meta">
-          <span class="target-meta-label">SISA MATERI</span>
-          <span class="target-meta-value">2 Modul • 4 Jam</span>
-        </div>
-        <div class="ring-progress-wrapper" aria-label="Progres 75%">
-          <svg class="ring-progress-svg" viewBox="0 0 40 40">
-            <circle class="ring-bg" cx="20" cy="20" r="16"></circle>
-            <circle class="ring-val indigo pct-75" cx="20" cy="20" r="16"></circle>
-          </svg>
-          <span class="ring-pct-text">75%</span>
-        </div>
+  <!-- Kanan: Rekomendasi Smart Planner -->
+  <article class="bento-card">
+    <div class="card-header-row">
+      <div class="card-heading-group">
+        <h2 class="card-heading-title">Rekomendasi Smart Planner</h2>
+        <span class="card-heading-sub">Alokasi slot waktu luang deterministik berbasis prioritas</span>
       </div>
+      <span class="pill pill-lime">Rule-Based Engine</span>
     </div>
 
-    <div class="semester-info-strip">
-      🎓 Total 21 SKS terdaftar semester ini • Target Indeks Prestasi Akademik: 3.85
-    </div>
+    <?php if ($topRec): ?>
+      <div class="planner-rec-card <?= ($topRec['priority'] ?? '') === 'high' ? 'is-high' : '' ?>">
+        <div class="planner-rec-top">
+          <div class="planner-rec-badges">
+            <span class="pill pill-lime">
+              <?= e($topRec['day_name']) ?> • <?= e($topRec['start_time']) ?> - <?= e($topRec['end_time']) ?> (<?= e($topRec['session_duration_hours']) ?>j)
+            </span>
+            <span class="pill <?= ($topRec['priority'] ?? '') === 'high' ? 'pill-orange' : 'pill-neutral' ?>">
+              Prioritas <?= ucfirst(e($topRec['priority'] ?? 'Medium')) ?>
+            </span>
+          </div>
+        </div>
+        <div class="planner-rec-title"><?= e($topRec['task_title']) ?></div>
+        <div class="planner-reason-box">
+          <strong>Alasan Rekomendasi:</strong> <?= e($topRec['reason']) ?>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="index.php?page=planner" class="btn-lime btn-sm">Tinjau &amp; Setujui Jadwal</a>
+        </div>
+      </div>
+    <?php elseif ($topUrgentTask): ?>
+      <div class="planner-rec-card <?= ($topUrgentTask['priority'] ?? '') === 'high' ? 'is-high' : '' ?>">
+        <div class="planner-rec-top">
+          <div class="planner-rec-badges">
+            <span class="pill pill-lime">Prioritas Utama Berikutnya</span>
+            <span class="pill <?= ($topUrgentTask['priority'] ?? '') === 'high' ? 'pill-orange' : 'pill-neutral' ?>">
+              <?= ucfirst(e($topUrgentTask['priority'] ?? 'Medium')) ?> • <?= number_format((float)($topUrgentTask['estimated_hours'] ?? 2.0), 1) ?> Jam
+            </span>
+          </div>
+        </div>
+        <div class="planner-rec-title"><?= e($topUrgentTask['title']) ?></div>
+        <div class="planner-reason-box">
+          <strong>Alasan Prioritas:</strong> Tenggat terdekat pada <strong><?= date('d M Y', strtotime($topUrgentTask['deadline_date'])) ?> pukul <?= e(substr($topUrgentTask['deadline_time'] ?? '23:59', 0, 5)) ?> WIB</strong> dengan estimasi <?= number_format((float)($topUrgentTask['estimated_hours'] ?? 2.0), 1) ?> jam. Buka Smart Planner untuk melihat pemetaan slot kosong tanpa bentrok kuliah.
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="index.php?page=planner" class="btn-lime btn-sm">Buka Smart Planner</a>
+          <a href="index.php?page=tasks" class="btn-secondary btn-sm">Lihat Semua Tugas</a>
+        </div>
+      </div>
+    <?php else: ?>
+      <div class="empty-state" style="padding: 32px 12px;">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg class="ui-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        </div>
+        <h3 class="empty-state-title">Smart Planner Siap Membantu</h3>
+        <p class="empty-state-desc">Tambahkan tugas kuliah pertamamu agar Smart Planner dapat menyusun rekomendasi slot belajar terbaik secara otomatis.</p>
+        <button type="button" class="btn-lime btn-sm" data-open-modal="quickTaskModal">+ Tambah Tugas</button>
+      </div>
+    <?php endif; ?>
   </article>
 </section>
-
-<!-- Injeksi Data Nyata dari Backend PHP ke Client Controller ui.js jika tersedia -->
-<script>
-  window.CAMPUSOS_INITIAL_DATA = {
-    <?php if (!empty($urgentTasks)): ?>
-    tasks: <?= json_encode(array_map(function($t) {
-      return [
-        'id'       => 'task-' . $t['id'],
-        'title'    => $t['title'],
-        'course'   => $t['course_name'] ?? 'Mata Kuliah',
-        'deadline' => $t['deadline_date'] . ', ' . substr($t['deadline_time'] ?? '23:59:00', 0, 5) . ' WIB',
-        'status'   => $t['status'] === 'done' ? 'Completed' : ($t['status'] === 'in_progress' ? 'In progress' : 'Upcoming'),
-        'priority' => ucfirst($t['priority'] ?? 'Sedang')
-      ];
-    }, $urgentTasks)) ?>,
-    <?php endif; ?>
-
-    <?php if (!empty($todaySchedules)): ?>
-    schedule: <?= json_encode(array_map(function($s, $idx) {
-      $colorPalettes = ['peach', 'lavender', 'mint', 'lime'];
-      $color = $colorPalettes[$idx % 4];
-      return [
-        'id'      => 'sch-' . $s['id'],
-        'title'   => $s['course_name'] ?? 'Mata Kuliah',
-        'meta'    => substr($s['start_time'], 0, 5) . ' - ' . substr($s['end_time'], 0, 5) . ' • ' . ($s['room'] ?? 'Ruang Teori'),
-        'color'   => $color,
-        'iconSvg' => '<polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>'
-      ];
-    }, $todaySchedules, array_keys($todaySchedules))) ?>,
-    <?php endif; ?>
-
-    <?php if (!empty($walletSummary)): ?>
-    budget: {
-      totalWeekly: <?= (float)($walletSummary['monthlyBudget'] ?? 600000) ?>,
-      remaining:   <?= (float)($walletSummary['remainingBudget'] ?? 450000) ?>,
-      spent:       <?= (float)($walletSummary['totalExpense'] ?? 150000) ?>,
-      status:      '<?= e($budgetStatus) ?>',
-      dailyData: [
-        { day: 'Min', label: 'Minggu', hours: 3.0, timeStr: '3j 00 mnt', dateStr: '15 Nov 2026', heightPct: 40, spending: 20000 },
-        { day: 'Sen', label: 'Senin', hours: 5.25, timeStr: '5j 15 mnt', dateStr: '16 Nov 2026', heightPct: 65, spending: 35000 },
-        { day: 'Sel', label: 'Selasa', hours: 2.65, timeStr: '2j 40 mnt', dateStr: '17 Nov 2026', heightPct: 35, spending: 25000 },
-        { day: 'Rab', label: 'Rabu', hours: 6.75, timeStr: '6j 45 mnt', dateStr: '18 Nov 2026', heightPct: 85, spending: 45000 },
-        { day: 'Kam', label: 'Kamis', hours: 4.0, timeStr: '4j 00 mnt', dateStr: '19 Nov 2026', heightPct: 50, spending: 15000 },
-        { day: 'Jum', label: 'Jumat', hours: 2.15, timeStr: '2j 10 mnt', dateStr: '20 Nov 2026', heightPct: 25, spending: 10000 },
-        { day: 'Sab', label: 'Sabtu', hours: 4.5, timeStr: '4j 30 mnt', dateStr: '21 Nov 2026', heightPct: 55, spending: 0 }
-      ],
-      activeDayIndex: 3
-    }
-    <?php endif; ?>
-  };
-</script>

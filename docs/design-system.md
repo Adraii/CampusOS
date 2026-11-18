@@ -1,199 +1,119 @@
 # Panduan Design System & UI Guidelines — CampusOS
 
-> **Konsep Desain:** 3-Column Bento Grid Productivity Dashboard  
+> **Konsep Desain:** Technical High-Contrast Dark Mode (Dark Bento Dashboard)  
 > **Target Pengguna:** Mahasiswa Modern  
-> **Filosofi Visual:** Fungsional, Playful yet Professional, Berorientasi Tindakan (*Action-Oriented*), dan Terstruktur Rapi.  
-> **Berkas Referensi Desain FigCraft:** [`docs/CampusOS-Dashboard.figcraft`](CampusOS-Dashboard.figcraft)
+> **Filosofi Visual:** Kontras Tinggi, Bersih, Lega (*Spacious*), Ramah Mahasiswa (bebas jargon panel admin teknis), dan Berorientasi Tindakan (*Action-Oriented*).  
+> **Berkas Master FigCraft:** [`docs/CampusOS-Dashboard.figcraft`](CampusOS-Dashboard.figcraft) (Artboard Dashboard Home & Artboard Tasks/Smart Planner).
 
 ---
 
-## 1. Arsitektur Tata Letak: 3-Column Bento Grid Shell
+## 1. Arsitektur Tata Letak (Dark Bento Shell)
 
-Dashboard CampusOS menggunakan tata letak bento 3-kolom modern di dalam shell frame desktop (`1440px × 900px`) dengan radius sudut `24px` dan gap `20px`:
+Antarmuka CampusOS dibangun di atas tata letak 2-region responsif dengan komposisi Bento Grid berjarak lega (`gap: 20px`):
 
 ```text
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ APP SHELL CONTAINER (Max 1440px, Background #F6F6F8, Padding 18px, Radius 24px)        │
-├───────────────────┬──────────────────────────────────────────┬─────────────────────────┤
-│ 1. SIDEBAR KIRI   │ 2. KANVAS TENGAH (1fr)                   │ 3. PANEL KANAN (320px)  │
-│    (240px)        │                                          │                         │
-│ • Deep Midnight   │ • Top Greeting Header                    │ • Kartu Profil & NIM    │
-│   Navy (#1A1B2E)  │ • Ringkasan Tugas Menunggu (Banner Lime) │ • Kalender Interaktif   │
-│ • Logo & Brand    │ • Jadwal Kuliah Hari Ini (List Row)      │ • Aktivitas Akademik    │
-│ • Menu Navigasi   │ • Grid 2-Kolom Bawah:                    │ • Catatan Cepat / Quick │
-│ • Quick Stats     │   - Grafik Belajar Mingguan (Bar Chart)  │   Reminders             │
-│ • Tombol Collapse │   - Widget Sisa Anggaran (Rp & Meter)    │                         │
-└───────────────────┴──────────────────────────────────────────┴─────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│ APP SHELL (#0B0D0E)                                                              │
+├──────────────────┬───────────────────────────────────────────────────────────────┤
+│ SIDEBAR KIRI     │ STICKY TOP HEADER (#0B0D0E, Border Bawah #242933)             │
+│ (248px, #111317) │ • Sapaan / Judul Halaman     [+ Catat Transaksi] [+ Tugas]    │
+│                  ├───────────────────────────────────────────────────────────────┤
+│ • Logo Lime      │ MAIN BENTO CANVAS (Max-Width 1320px, Padding 24px 32px)       │
+│ • Menu Utama     │                                                               │
+│   - Dashboard    │ Row 1: 4 Metric KPI Cards (SKS, Tugas, Studi, Sisa Anggaran)  │
+│   - Jadwal       │ Row 2: Beban Belajar (CSS Bar Chart) | Timeline Penugasan     │
+│   - Kalender     │ Row 3: Jadwal Kuliah Hari Ini | Rekomendasi Smart Planner     │
+│   - Tugas        │        (beserta kotak alasan transparan & tombol persetujuan) │
+│   - Smart Planner│                                                               │
+│   - Keuangan     │                                                               │
+│ • Profil & Logout│                                                               │
+└──────────────────┴───────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 2. Token Desain Terpusat (`public/assets/css/tokens.css`)
 
-Semua styling di CampusOS wajib memanfaatkan variabel CSS terpusat yang dideklarasikan di `public/assets/css/tokens.css`. Dilarang menuliskan kode warna hex statis secara langsung pada file komponen.
+Seluruh warna, tipografi, radius, dan jarak dikelola secara terpusat di `public/assets/css/tokens.css`. Dilarang menulis warna hex hardcoded berulang kali di file komponen.
 
-### A. Palet Warna (Color Palette)
+### A. Palet Warna High-Contrast Dark Mode
 
 ```css
 :root {
-  /* Brand Core Palette */
-  --color-brand-dark: #1A1B2E;        /* Deep Midnight Navy (Sidebar & High-Contrast Cards) */
-  --color-brand-dark-card: #22243C;   /* Varian gelap untuk card di sidebar */
-  --color-brand-lime: #D4F26A;        /* Electric Lime (Aksen Tombol Utama & Highlight) */
-  --color-brand-lime-hover: #c4e456;
-  --color-brand-dark-text: #18181B;
-
-  /* Pastel Accent Tokens (Kategori Matkul & Badge) */
-  --color-pastel-peach: #FDE6D8;      /* Peach / Orange Muda */
-  --color-pastel-peach-text: #C2410C;
-  --color-pastel-peach-icon: #D97706;
-
-  --color-pastel-lavender: #E5DFFF;   /* Lavender / Ungu Lembut */
-  --color-pastel-lavender-text: #7E22CE;
-  --color-pastel-lavender-icon: #6C5CE7;
-
-  --color-pastel-mint: #E2F5EA;       /* Mint / Hijau Segar */
-  --color-pastel-mint-text: #059669;
-
-  --color-pastel-lime: #EBF9B8;       /* Lime Pastel */
-  --color-pastel-lime-text: #4D7C0F;
-
-  /* Backgrounds & Surfaces */
-  --color-bg-page: #EBE9F5;           /* Wallpaper lembut pembungkus luar */
-  --color-bg-canvas: #F6F6F8;         /* Kanvas utama (Warm Off-White) */
-  --color-bg-card: #FFFFFF;           /* Latar kartu putih murni */
-  --color-bg-subtle: #F8FAFC;
-  --color-bg-muted: #F1F5F9;
+  /* Core Dark Bento Surfaces */
+  --bg-canvas: #0B0D0E;              /* Latar belakang kanvas utama (Deep Obsidian) */
+  --bg-sidebar: #111317;             /* Sidebar navigasi & inner recessed panels */
+  --bg-card: #16191E;                /* Permukaan utama Kartu Bento */
+  --bg-card-hover: #1C2128;          /* State hover kartu & menu aktif */
+  --bg-input: #0F1216;               /* Latar belakang field input form */
 
   /* Borders & Dividers */
-  --color-border-subtle: #E2E8F0;
-  --color-border-strong: #CBD5E1;
+  --border-subtle: #242933;          /* Border tipis 1px khas Technical Dark Bento */
+  --border-strong: #323946;          /* Border saat hover / dialog modal */
+  --border-focus: #C8F538;           /* Border fokus input (Electric Lime) */
 
   /* Typography Colors */
-  --color-text-main: #1A1B2E;         /* Teks utama (Slate Dark) */
-  --color-text-muted: #64748B;        /* Teks sekunder / metadata */
-  --color-text-subtle: #94A3B8;       /* Teks placeholder / disable */
-  --color-text-inverse: #FFFFFF;      /* Teks putih */
-  --color-sidebar-text: #C2C5DE;
-  --color-sidebar-icon: #8E92BC;
+  --text-primary: #F3F4F6;           /* Teks utama kontras tinggi */
+  --text-secondary: #9CA3AF;         /* Teks deskripsi, label, metadata */
+  --text-muted: #6B7280;             /* Placeholder & label halus */
+  --text-on-accent: #0B0D0E;         /* Teks gelap pekat di atas tombol Lime/Orange */
+
+  /* Brand & Semantic High-Contrast Accents */
+  --accent-lime: #C8F538;            /* Electric Lime — Aksi utama, fokus, slot siap */
+  --accent-lime-hover: #D6FA5C;
+  --accent-lime-soft: #1F2A16;       /* Latar belakang badge/pill Electric Lime */
+
+  --accent-orange: #FB923C;          /* Warm Orange — Prioritas tinggi, deadline dekat, warning */
+  --accent-orange-hover: #FDA45C;
+  --accent-orange-soft: #2D1F14;     /* Latar belakang badge/pill Warm Orange */
+
+  --accent-cyan: #38BDF8;            /* Indikator status In Progress & info sekunder */
+  --accent-danger: #F87171;          /* Overdue, error validasi, aksi hapus */
+  --accent-success: #4ADE80;         /* Status tugas selesai & anggaran sehat */
 }
 ```
 
----
-
-### B. Tipografi & Skala Sudut (Typography & Border Radii)
+### B. Tipografi & Skala Radius
 
 ```css
 :root {
-  /* Font Family */
   --font-family-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Font Sizes */
-  --font-size-2xs: 0.625rem; /* 10px - Micro labels */
-  --font-size-xs: 0.75rem;   /* 12px - Badges, sub-text */
-  --font-size-sm: 0.8125rem; /* 13px - Meta deskripsi */
-  --font-size-base: 0.875rem;/* 14px - Standar body UI */
-  --font-size-md: 0.9375rem; /* 15px - Sub-heading */
-  --font-size-lg: 1.125rem;  /* 18px - Judul kartu */
-  --font-size-xl: 1.25rem;   /* 20px - Section title */
-  --font-size-2xl: 1.5rem;   /* 24px - Judul utama halaman */
-
-  /* Border Radii */
   --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-icon: 10px;
   --radius-md: 12px;
-  --radius-pill: 14px;
-  --radius-card: 20px;       /* Standar kartu Bento */
-  --radius-frame: 24px;      /* Standar shell aplikasi */
-  --radius-full: 9999px;     /* Tombol pil & avatar */
-
-  /* Dimensions */
-  --sidebar-width: 240px;
-  --right-panel-width: 320px;
-  --max-app-width: 1440px;
-  --min-app-height: 900px;
+  --radius-card: 16px;               /* Standar Kartu Bento & KPI */
+  --radius-frame: 20px;              /* Shell utama & Auth card */
+  --radius-full: 9999px;             /* Pill badge, timeline bar, progress bar */
 }
 ```
 
 ---
 
-## 3. Struktur Berkas CSS & JS Modular
+## 3. Arsitektur Berkas Frontend Modular
 
-Arsitektur frontend CampusOS dibagi ke dalam 3 berkas CSS dan 1 pengendali JavaScript interaktif di `public/assets/`:
-
-1. **`public/assets/css/tokens.css`:**
-   - Menyimpan seluruh Design Tokens (Warna, Font, Jarak, Sudut, Bayangan, Transisi, dan Mode Gelap).
-2. **`public/assets/css/layout.css`:**
-   - Mengatur struktur shell makro, tata letak 3 kolom grid, header pencarian, navigasi drawer responsif (`@media max-width: 860px`), dan wrapper kalender.
-3. **`public/assets/css/components.css`:**
-   - Mengatur komponen atomik: kartu bento (`.card-bento`), bar chart mingguan (`.chart-bar`), item baris jadwal (`.schedule-row`), tombol aksi (`.btn-lime`), badge pastel, modal dialog pop-up (`.modal-backdrop`), serta sistem notifikasi toast (`.toast`).
-4. **`public/assets/js/ui.js`:**
-   - Pengendali interaktivitas Vanilla JS:
-     - Real-time modal pop-up tambah pengeluaran & tugas baru.
-     - Interaktivitas grafik batang mingguan (pilihan hari aktif & kalkulasi jam).
-     - Kalender mini interaktif (navigasi bulan & seleksi tanggal).
-     - Filter pencarian cepat (*live search*) jadwal kuliah & tugas.
-     - Auto-dismiss notifikasi toast.
-     - **Hook Sinkronisasi Backend:** Mendukung injeksi data server-side PHP melalui `window.CAMPUSOS_INITIAL_DATA` dan submit native POST/fetch ke controller PHP.
+| Berkas | Tanggung Jawab |
+|---|---|
+| `public/assets/css/tokens.css` | Deklarasi seluruh CSS Custom Properties (warna, tipografi, radius, spasi, shadow). |
+| `public/assets/css/layout.css` | Tata letak makro (Sidebar `248px`, Topbar sticky, Bento Grid tracks, dan drawer mobile `<= 860px`). |
+| `public/assets/css/components.css` | Komponen UI modular (KPI Cards, CSS Bar Chart, Horizontal Timeline Pill Bars, Reason Box, Data Tables, Modals, Banners, Empty States). |
+| `public/assets/js/ui.js` | Interaktivitas murni Vanilla JS (mobile drawer, modal deklaratif `data-open-modal`, populator modal edit tugas, chart interaktif, auto-dismiss flash alert). Bebas ketergantungan `localStorage` untuk data inti. |
 
 ---
 
-## 4. Standar Komponen Antarmuka (Core Components)
+## 4. Katalog Komponen Utama
 
-### A. Kartu Bento (*Bento Card*)
-```css
-.card-bento {
-  background-color: var(--color-bg-card);
-  border-radius: var(--radius-card);
-  padding: 20px;
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--color-border-subtle);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.card-bento:hover {
-  box-shadow: var(--shadow-hover);
-}
-```
-
-### B. Tombol Aksen (*Electric Lime Button*)
-```css
-.btn-lime {
-  background-color: var(--color-brand-lime);
-  color: var(--color-brand-dark-text);
-  font-family: var(--font-family-sans);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  padding: 10px 18px;
-  border-radius: var(--radius-full);
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
-}
-
-.btn-lime:hover {
-  background-color: var(--color-brand-lime-hover);
-  transform: translateY(-1px);
-}
-```
-
-### C. Badge Pastel (*Pastel Badges*)
-- **Badge Peach:** `background: var(--color-pastel-peach); color: var(--color-pastel-peach-text);`
-- **Badge Lavender:** `background: var(--color-pastel-lavender); color: var(--color-pastel-lavender-text);`
-- **Badge Mint:** `background: var(--color-pastel-mint); color: var(--color-pastel-mint-text);`
-- **Badge Lime:** `background: var(--color-pastel-lime); color: var(--color-pastel-lime-text);`
+1. **Metric KPI Cards (`.kpi-card`):** Menampilkan metrik ringkas (`SKS Semester Ini`, `Tugas Aktif`, `Beban Studi`, `Sisa Anggaran`) lengkap dengan ikon indikator, nilai bold kontras tinggi, pill semantik, atau progress bar.
+2. **Clean CSS Bar Chart (`.bar-chart-wrap`):** Grafik 7 batang vertikal (Sen–Min) murni CSS tanpa library berat, membedakan puncak aktivitas belajar (`#C8F538`), peringatan beban (`#FB923C`), dan hari reguler (`#242933`).
+3. **Horizontal Timeline Pill Bars (`.timeline-list`):** Representasi durasi estimasi tugas dan kedekatan deadline menggunakan batang pil horizontal berwarna Warm Orange (prioritas tinggi) dan Electric Lime (prioritas normal).
+4. **Smart Planner Recommendation Card (`.planner-rec-card`):** Kartu rekomendasi slot belajar dengan border kiri semantik, pill jadwal (`#C8F538`), kotak alasan transparan (`.planner-reason-box`), dan form POST eksplisit untuk persetujuan simpan ke kalender.
+5. **Conflict / Alert Banners (`.alert-banner`) & Friendly Empty States (`.empty-state`):** Setiap halaman wajib menangani pesan umpan balik (sukses, peringatan bentrok/terlambat, gagal) serta tampilan ramah ketika data kosong disertai tombol CTA langsung.
 
 ---
 
-## 5. Workflow Desain FigCraft (`figcraft-live-designer`)
+## 5. Workflow FigCraft Live Designer (`figcraft-live-designer`)
 
-1. **Sumber Dokumen Master:** Berkas acuan desain utama disimpan di `docs/CampusOS-Dashboard.figcraft`.
-2. **Aturan Manipulasi Kanvas:**
-   - Dilarang membuat skrip `.js` generator manual untuk menulis berkas `.figcraft`.
-   - Wajib memanggil MCP Server `figcraft` secara langsung dengan metode *progressive canvas drawing* (Frame luar $\to$ Kolom layout $\to$ Kartu bento $\to$ Teks & Ikon).
-3. **Verifikasi & Ekstraksi:** Gunakan screenshot visual / inspect tree MCP sebelum mengekstraksi token dan markup ke `public/assets/css/` dan `views/`.
+1. Seluruh pembaruan visual dimulai di kanvas live FigCraft Desktop (`docs/CampusOS-Dashboard.figcraft`) menggunakan tool resmi MCP Server `figcraft`.
+2. **Dilarang keras** membuat skrip `.js` generator manual untuk menulis file `.figcraft`.
+3. Setelah diverifikasi via `screenshot` MCP, token dan komponen disinkronisasikan secara eksplisit ke `public/assets/css/` dan template `views/`.

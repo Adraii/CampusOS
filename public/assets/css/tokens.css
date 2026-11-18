@@ -1,111 +1,115 @@
 /**
- * CampusOS — Design Tokens
- * 100% Aligned with FigCraft Final Design & Eduplex Adaptation
+ * CampusOS — Design Tokens (Technical High-Contrast Dark Mode)
+ * Sinkronisasi 100% dengan FigCraft Master (docs/CampusOS-Dashboard.figcraft)
  */
 
 :root {
-  /* Brand Core Palette */
-  --color-brand-dark: #1A1B2E;        /* Deep Midnight Navy */
-  --color-brand-dark-card: #22243C;
-  --color-brand-lime: #D4F26A;        /* Electric Lime */
-  --color-brand-lime-hover: #c4e456;
-  --color-brand-dark-text: #18181B;
-
-  /* Pastel Accent Tokens */
-  --color-pastel-peach: #FDE6D8;
-  --color-pastel-peach-text: #C2410C;
-  --color-pastel-peach-icon: #D97706;
-
-  --color-pastel-lime: #EBF9B8;
-  --color-pastel-lime-text: #4D7C0F;
-
-  --color-pastel-lavender: #E5DFFF;
-  --color-pastel-lavender-text: #7E22CE;
-  --color-pastel-lavender-icon: #6C5CE7;
-
-  --color-pastel-mint: #E2F5EA;
-  --color-pastel-mint-text: #059669;
-
-  --color-pastel-rose: #FED7AA;
-  --color-pastel-rose-text: #C2410C;
-
-  /* Backgrounds & Surfaces */
-  --color-bg-page: #EBE9F5;           /* Soft lilac outer wallpaper */
-  --color-bg-canvas: #F6F6F8;         /* Warm Off-White Main Canvas */
-  --color-bg-card: #FFFFFF;
-  --color-bg-subtle: #F8FAFC;
-  --color-bg-muted: #F1F5F9;
+  /* Core Dark Bento Surfaces */
+  --bg-canvas: #0B0D0E;              /* Main Page & Content Background */
+  --bg-sidebar: #111317;             /* Sidebar & Elevated Recessed Panels */
+  --bg-card: #16191E;                /* Primary Bento Card Surface */
+  --bg-card-hover: #1C2128;          /* Interactive Hover Surface */
+  --bg-input: #0F1216;               /* Form Input Background */
 
   /* Borders & Dividers */
-  --color-border-subtle: #E2E8F0;
-  --color-border-strong: #CBD5E1;
+  --border-subtle: #242933;          /* Crisp 1px Bento Card Border */
+  --border-strong: #323946;          /* Active/Hover Border */
+  --border-focus: #C8F538;           /* Input Focus Border (Electric Lime) */
 
   /* Typography Colors */
-  --color-text-main: #1A1B2E;
-  --color-text-muted: #64748B;
-  --color-text-subtle: #94A3B8;
-  --color-text-inverse: #FFFFFF;
-  --color-sidebar-text: #C2C5DE;
-  --color-sidebar-icon: #8E92BC;
+  --text-primary: #F3F4F6;           /* High-Contrast Off-White */
+  --text-secondary: #9CA3AF;         /* Muted Slate Secondary Copy */
+  --text-muted: #6B7280;             /* Subtle Metadata & Placeholders */
+  --text-on-accent: #0B0D0E;         /* Dark Ink Text on Lime/Orange Buttons */
+
+  /* High-Contrast Brand & Semantic Accents */
+  --accent-lime: #C8F538;            /* Electric Lime — Primary CTA & Focus */
+  --accent-lime-hover: #D6FA5C;
+  --accent-lime-soft: #1F2A16;       /* Dark Moss Pill Background */
+  --accent-lime-border: rgba(200, 245, 56, 0.28);
+
+  --accent-orange: #FB923C;          /* Warm Orange — Urgent, Priority High, Warnings */
+  --accent-orange-hover: #FDA45C;
+  --accent-orange-soft: #2D1F14;     /* Dark Amber Pill Background */
+  --accent-orange-border: rgba(251, 146, 60, 0.3);
+
+  --accent-cyan: #38BDF8;            /* Info & Secondary Course Indicator */
+  --accent-cyan-soft: #122634;
+
+  --accent-danger: #F87171;          /* Error / Overdue / Destructive */
+  --accent-danger-soft: #2D1619;
+  --accent-danger-border: rgba(248, 113, 113, 0.3);
+
+  --accent-success: #4ADE80;         /* Done / Healthy Budget */
+  --accent-success-soft: #14291E;
+
+  /* Backward-compatible Token Aliases (for fallback templates & helpers) */
+  --color-bg-base: var(--bg-canvas);
+  --color-bg-canvas: var(--bg-canvas);
+  --color-bg-surface: var(--bg-card);
+  --color-bg-card: var(--bg-card);
+  --color-border: var(--border-subtle);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-main: var(--text-primary);
+  --color-text-muted: var(--text-secondary);
+  --color-brand-dark: var(--bg-sidebar);
+  --color-brand-lime: var(--accent-lime);
+  --color-brand-dark-text: var(--text-on-accent);
+  --color-pastel-lime: var(--accent-lime-soft);
+  --color-pastel-lime-text: var(--accent-lime);
+  --color-pastel-peach: var(--accent-orange-soft);
+  --color-pastel-peach-text: var(--accent-orange);
+  --color-pastel-mint: var(--accent-success-soft);
+  --color-pastel-mint-text: var(--accent-success);
+  --color-pastel-lavender: var(--accent-cyan-soft);
+  --color-pastel-lavender-text: var(--accent-cyan);
 
   /* Typography Scale */
-  --font-family-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --font-size-2xs: 0.625rem; /* 10px */
+  --font-size-2xs: 0.6875rem; /* 11px */
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.8125rem;  /* 13px */
   --font-size-base: 0.875rem; /* 14px */
   --font-size-md: 0.9375rem;  /* 15px */
   --font-size-lg: 1.125rem;   /* 18px */
-  --font-size-xl: 1.25rem;    /* 20px */
-  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-xl: 1.375rem;   /* 22px */
+  --font-size-2xl: 1.75rem;   /* 28px */
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
   /* Border Radii */
   --radius-xs: 6px;
   --radius-sm: 8px;
-  --radius-icon: 10px;
   --radius-md: 12px;
-  --radius-pill: 14px;
-  --radius-card: 20px;
-  --radius-frame: 24px;
+  --radius-card: 16px;
+  --radius-frame: 20px;
   --radius-full: 9999px;
 
-  /* Dimensions */
-  --sidebar-width: 240px;
-  --right-panel-width: 320px;
-  --max-app-width: 1440px;
-  --min-app-height: 900px;
+  /* Layout Dimensions */
+  --sidebar-width: 248px;
+  --topbar-height: 76px;
+  --content-max-width: 1320px;
 
   /* Elevation Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 4px 12px rgba(26, 27, 46, 0.03);
-  --shadow-hover: 0 8px 24px rgba(26, 27, 46, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-glow-lime: 0 0 24px rgba(200, 245, 56, 0.14);
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
-}
-
-/* Dark Mode Tokens */
-[data-theme="dark"] {
-  --color-bg-page: #0D0E17;
-  --color-bg-canvas: #121324;
-  --color-bg-card: #1A1B2E;
-  --color-bg-subtle: #22243C;
-  --color-bg-muted: #252846;
-
-  --color-border-subtle: #2A2D4A;
-  --color-border-strong: #3A3E66;
-
-  --color-text-main: #F6F6F8;
-  --color-text-muted: #A0A5C2;
-  --color-text-subtle: #6D7396;
-
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --transition-fast: 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-normal: 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }

@@ -1,6 +1,6 @@
 /**
- * CampusOS — Main Layout Architecture
- * 3-Column Bento Grid Shell (Sidebar ~240px, Main Canvas ~880px, Right Panel ~320px)
+ * CampusOS — Main Layout Architecture (Technical High-Contrast Dark Mode)
+ * Clean 2-Region Dark Bento Shell: Fixed Sidebar (248px) + Spacious Canvas (1fr)
  */
 
 *,
@@ -14,47 +14,49 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
   font-family: var(--font-family-sans);
-  background-color: var(--color-bg-page);
-  color: var(--color-text-main);
-  line-height: 1.5;
+  font-size: var(--font-size-base);
+  line-height: 1.55;
+  color: var(--text-primary);
+  background-color: var(--bg-canvas);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body.no-scroll {
   overflow: hidden;
 }
 
-/* ==========================================================================
-   DESKTOP DASHBOARD SHELL (1440 x 900)
-   ========================================================================== */
-
-.app-shell {
-  width: 100%;
-  max-width: var(--max-app-width);
-  min-height: var(--min-app-height);
-  background-color: var(--color-bg-canvas);
-  border-radius: var(--radius-frame);
-  box-shadow: 0 20px 40px rgba(26, 27, 46, 0.08);
-  display: flex;
-  position: relative;
-  overflow: hidden;
-  padding: 18px;
-  gap: 20px;
+a {
+  color: var(--accent-lime);
+  text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
-/* Mobile Drawer Overlay Backdrop */
+a:hover {
+  color: var(--accent-lime-hover);
+}
+
+/* ==========================================================================
+   APP SHELL
+   ========================================================================== */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-canvas);
+}
+
+/* Mobile Sidebar Backdrop */
 .sidebar-backdrop {
   position: fixed;
   inset: 0;
-  background-color: rgba(26, 27, 46, 0.6);
+  background-color: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(4px);
   z-index: 90;
   opacity: 0;
@@ -68,279 +70,348 @@ body.no-scroll {
 }
 
 /* ==========================================================================
-   1. KOLOM KIRI — SIDEBAR NAVIGASI (~240px, #1A1B2E)
+   1. SIDEBAR NAVIGASI (#111317)
    ========================================================================== */
-
 .sidebar {
   width: var(--sidebar-width);
-  background-color: var(--color-brand-dark);
-  border-radius: var(--radius-frame);
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: var(--space-6) var(--space-4);
+  position: sticky;
+  top: 0;
+  height: 100vh;
   flex-shrink: 0;
-  z-index: 50;
+  z-index: 100;
   transition: transform var(--transition-normal);
 }
 
-/* ==========================================================================
-   2. KOLOM TENGAH — KANVAS UTAMA
-   ========================================================================== */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-2) var(--space-6);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-5);
+}
 
-.main-canvas {
+.sidebar-logo-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background-color: var(--accent-lime);
+  color: var(--text-on-accent);
+  font-weight: 800;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-glow-lime);
+}
+
+.sidebar-brand-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-brand-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.sidebar-brand-sub {
+  font-size: var(--font-size-2xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  position: relative;
+  border: 1px solid transparent;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.nav-link:hover {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.nav-link.is-active {
+  background-color: var(--bg-card-hover);
+  color: var(--accent-lime);
+  font-weight: var(--font-weight-semibold);
+  border-color: var(--border-subtle);
+}
+
+.nav-link.is-active::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background-color: var(--accent-lime);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+}
+
+.user-avatar-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background-color: var(--accent-lime-soft);
+  border: 1px solid var(--accent-lime-border);
+  color: var(--accent-lime);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-user-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-sem {
+  font-size: var(--font-size-2xs);
+  color: var(--accent-lime);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ==========================================================================
+   2. MAIN WORKSPACE & TOPBAR (#0B0D0E)
+   ========================================================================== */
+.main-workspace {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 12px 6px;
+  background-color: var(--bg-canvas);
 }
 
-/* Top Greeting Header */
+.app-topbar {
+  min-height: var(--topbar-height);
+  padding: var(--space-4) var(--space-8);
+  background-color: rgba(11, 13, 14, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.topbar-heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.topbar-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.main-canvas {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ==========================================================================
+   3. BENTO GRID TRACKS
+   ========================================================================== */
+.kpi-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.bento-grid-split {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: var(--space-5);
+}
+
+.bento-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
 .canvas-top-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  width: 100%;
-}
-
-.canvas-top-left {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.canvas-top-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-reset-demo {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-pill);
-  padding: 6px 14px;
-  font-family: inherit;
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  white-space: nowrap;
-}
-
-.btn-reset-demo:hover {
-  background-color: var(--color-bg-muted);
-  color: var(--color-text-main);
-  border-color: var(--color-border-strong);
-  transform: translateY(-1px);
-}
-
-.sidebar-collapse-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-sm);
-  color: var(--color-sidebar-text);
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  margin-left: auto;
-  transition: all var(--transition-fast);
-  flex-shrink: 0;
-}
-
-.sidebar-collapse-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-}
-
-.sidebar.is-collapsed {
-  width: 76px;
-  padding: 24px 10px;
-}
-
-.sidebar.is-collapsed .sidebar-brand-name,
-.sidebar.is-collapsed .nav-link span,
-.sidebar.is-collapsed .sidebar-focus-card .focus-deco-lines,
-.sidebar.is-collapsed .focus-card-pill {
-  display: none;
-}
-
-.sidebar.is-collapsed .sidebar-header {
-  flex-direction: column;
-  justify-content: center;
-  padding: 8px 0 20px;
-  gap: 8px;
-}
-
-.sidebar.is-collapsed .sidebar-collapse-btn {
-  margin-left: 0;
-  transform: rotate(180deg);
-}
-
-.sidebar.is-collapsed .nav-link {
-  justify-content: center;
-  padding: 0;
-}
-
-.sidebar.is-collapsed .sidebar-focus-card {
-  padding: 10px;
-  align-items: center;
-}
-
-.sidebar.is-collapsed .focus-card-top {
-  justify-content: center;
-}
-
-.canvas-header {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: var(--space-4);
 }
 
 .greeting-title {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
 .greeting-subtitle {
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-/* Baris 1: 3 Kartu Ringkasan Atas (Grid 3 Kolom Sejajar) */
-.summary-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-/* Baris 2: Grid 2 Kolom Sejajar (Grafik Aktivitas & Jadwal Kuliah) */
-.middle-bento-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr;
-  gap: 20px;
-  align-items: stretch;
-}
-
-/* Baris 3: Progres Target Semester (Full Width Card) */
-.semester-target-row {
-  width: 100%;
+  color: var(--text-secondary);
+  margin-top: 4px;
 }
 
 /* ==========================================================================
-   3. KOLOM KANAN — PANEL PENDUKUNG (~320px)
+   4. RESPONSIVENESS
    ========================================================================== */
-
-.right-panel {
-  width: var(--right-panel-width);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex-shrink: 0;
-  padding: 8px 0;
-}
-
-/* Mobile Toggle Hamburger Button */
-.mobile-nav-toggle {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-  color: var(--color-text-main);
-  cursor: pointer;
-}
-
-/* ==========================================================================
-   RESPONSIVE BREAKPOINTS
-   ========================================================================== */
-
-@media (max-width: 1380px) {
-  body {
-    padding: 12px;
+@media (max-width: 1180px) {
+  .kpi-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .middle-bento-grid {
+  .bento-grid-split,
+  .bento-grid-2 {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 1180px) {
-  .app-shell {
-    flex-direction: column;
-    min-height: auto;
-    border-radius: 0;
-    padding: 14px;
-  }
-
-  .right-panel {
-    width: 100%;
-  }
-
-  .summary-cards-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-}
-
 @media (max-width: 860px) {
-  body {
-    padding: 0;
-    align-items: flex-start;
-  }
-
-  .app-shell {
-    border-radius: 0;
-    box-shadow: none;
-  }
-
   .mobile-nav-toggle {
     display: inline-flex;
   }
 
-  .canvas-top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
   .sidebar {
     position: fixed;
-    top: 0;
     left: 0;
+    top: 0;
     bottom: 0;
-    height: 100vh;
-    border-radius: 0;
     transform: translateX(-100%);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
-    z-index: 100;
+    box-shadow: var(--shadow-card);
   }
 
   .sidebar.is-open {
     transform: translateX(0);
   }
-}
 
-@media (max-width: 640px) {
-  .summary-cards-grid {
-    grid-template-columns: 1fr;
+  .app-topbar {
+    padding: var(--space-3) var(--space-4);
   }
 
-  .greeting-title {
-    font-size: var(--font-size-xl);
+  .main-canvas {
+    padding: var(--space-4);
+  }
+
+  .topbar-actions .btn-secondary span {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .kpi-grid-4 {
+    grid-template-columns: 1fr;
   }
 }
