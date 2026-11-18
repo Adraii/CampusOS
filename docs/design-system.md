@@ -1,25 +1,26 @@
 # Panduan Design System & UI Guidelines — CampusOS
 
-> **Konsep Desain:** Technical High-Contrast Dark Mode (Dark Bento Dashboard)  
+> **Konsep Desain:** Dual Theme System — Technical High-Contrast Dark Mode (Default) & Clean Daylight Light Mode  
 > **Target Pengguna:** Mahasiswa Modern  
 > **Filosofi Visual:** Kontras Tinggi, Bersih, Lega (*Spacious*), Ramah Mahasiswa (bebas jargon panel admin teknis), dan Berorientasi Tindakan (*Action-Oriented*).  
+> **Transisi Visual:** Circular Reveal Animation via Native View Transitions API (`document.startViewTransition`) yang bertitik tolak langsung dari posisi tombol toggle.  
 > **Berkas Master FigCraft:** [`docs/CampusOS-Dashboard.figcraft`](CampusOS-Dashboard.figcraft) (Artboard Dashboard Home & Artboard Tasks/Smart Planner).
 
 ---
 
-## 1. Arsitektur Tata Letak (Dark Bento Shell)
+## 1. Arsitektur Tata Letak (Bento Shell)
 
 Antarmuka CampusOS dibangun di atas tata letak 2-region responsif dengan komposisi Bento Grid berjarak lega (`gap: 20px`):
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────┐
-│ APP SHELL (#0B0D0E)                                                              │
+│ APP SHELL (--bg-canvas)                                                          │
 ├──────────────────┬───────────────────────────────────────────────────────────────┤
-│ SIDEBAR KIRI     │ STICKY TOP HEADER (#0B0D0E, Border Bawah #242933)             │
-│ (248px, #111317) │ • Sapaan / Judul Halaman     [+ Catat Transaksi] [+ Tugas]    │
+│ SIDEBAR KIRI     │ STICKY TOPBAR (--bg-canvas, Border Bawah --border-subtle)     │
+│ (248px)          │ • Sapaan / Judul    [🌗 Tema] [+ Catat Transaksi] [+ Tugas]    │
 │                  ├───────────────────────────────────────────────────────────────┤
-│ • Logo Lime      │ MAIN BENTO CANVAS (Max-Width 1320px, Padding 24px 32px)       │
-│ • Menu Utama     │                                                               │
+│ • Logo Brand     │ MAIN BENTO CANVAS (Max-Width 1320px, Padding 24px 32px)       │
+│ • Menu Navigasi  │                                                               │
 │   - Dashboard    │ Row 1: 4 Metric KPI Cards (SKS, Tugas, Studi, Sisa Anggaran)  │
 │   - Jadwal       │ Row 2: Beban Belajar (CSS Bar Chart) | Timeline Penugasan     │
 │   - Kalender     │ Row 3: Jadwal Kuliah Hari Ini | Rekomendasi Smart Planner     │
@@ -32,14 +33,15 @@ Antarmuka CampusOS dibangun di atas tata letak 2-region responsif dengan komposi
 
 ---
 
-## 2. Token Desain Terpusat (`public/assets/css/tokens.css`)
+## 2. Token Desain & Dual Theme (`public/assets/css/tokens.css`)
 
-Seluruh warna, tipografi, radius, dan jarak dikelola secara terpusat di `public/assets/css/tokens.css`. Dilarang menulis warna hex hardcoded berulang kali di file komponen.
+Seluruh warna, tipografi, radius, dan jarak dikelola secara terpusat di `public/assets/css/tokens.css`. Dilarang menulis warna hex hardcoded berulang kali di berkas antarmuka.
 
-### A. Palet Warna High-Contrast Dark Mode
+### A. Palet Warna Technical High-Contrast Dark Mode (`[data-theme="dark"]`, Default)
 
 ```css
-:root {
+:root,
+[data-theme="dark"] {
   /* Core Dark Bento Surfaces */
   --bg-canvas: #0B0D0E;              /* Latar belakang kanvas utama (Deep Obsidian) */
   --bg-sidebar: #111317;             /* Sidebar navigasi & inner recessed panels */
@@ -73,21 +75,46 @@ Seluruh warna, tipografi, radius, dan jarak dikelola secara terpusat di `public/
 }
 ```
 
-### B. Tipografi & Skala Radius
+### B. Palet Warna Clean Daylight Light Mode (`[data-theme="light"]`)
 
 ```css
-:root {
-  --font-family-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
-  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+[data-theme="light"] {
+  /* Surfaces */
+  --bg-canvas: #F4F6F8;              /* Soft Cool Grey Canvas */
+  --bg-sidebar: #FFFFFF;             /* Clean White Sidebar */
+  --bg-card: #FFFFFF;                /* Pure White Bento Cards */
+  --bg-card-hover: #F8FAFC;          /* Subtle Light Hover */
+  --bg-input: #FFFFFF;               /* Clean Input Field */
 
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-card: 16px;               /* Standar Kartu Bento & KPI */
-  --radius-frame: 20px;              /* Shell utama & Auth card */
-  --radius-full: 9999px;             /* Pill badge, timeline bar, progress bar */
+  /* Borders & Dividers */
+  --border-subtle: #E2E8F0;          /* Crisp Slate-200 Border */
+  --border-strong: #CBD5E1;          /* Slate-300 Focus/Hover */
+  --border-focus: #84CC16;           /* Fresh Lime-600 Focus */
+
+  /* Typography */
+  --text-primary: #0F172A;           /* Deep Slate-900 */
+  --text-secondary: #475569;         /* Neutral Slate-600 */
+  --text-muted: #64748B;             /* Muted Slate-500 */
+  --text-on-accent: #0F172A;         /* Slate-900 High-Contrast on Lime/Orange */
+
+  /* Accents */
+  --accent-lime: #84CC16;            /* Fresh Lime (Light friendly contrast) */
+  --accent-lime-hover: #65A30D;
+  --accent-lime-soft: #ECFCCB;       /* Lime-100 Soft Pill */
+  --accent-orange: #EA580C;          /* Orange-600 */
+  --accent-orange-hover: #C2410C;
+  --accent-orange-soft: #FFEDD5;     /* Orange-100 Soft Pill */
+  --accent-cyan: #0284C7;            /* Sky-600 */
+  --accent-danger: #DC2626;          /* Red-600 */
+  --accent-success: #16A34A;         /* Green-600 */
 }
 ```
+
+### C. Animasi Circular Reveal & Anti-Flicker
+
+1. **Anti-Flicker Initialization:** Di `<head>` setiap layout, skrip kecil dijalankan secara sinkron sebelum render DOM untuk membaca `localStorage.getItem('campusos-theme')` dan menyetel atribut `data-theme` pada `<html>`. Mencegah flash layar putih saat membuka aplikasi.
+2. **Circular Reveal Transition:** Saat tombol `#themeToggleBtn` ditekan, fungsi `document.startViewTransition()` menjalankan animasi `clip-path: circle(...)` dari titik koordinat klik pengguna, membuka tema baru secara radial mulus selama `380ms`.
+3. **Fallback Graceful:** Jika browser tidak mendukung View Transitions API, tema beralih seketika dengan transisi warna CSS `0.28s ease`.
 
 ---
 
@@ -95,25 +122,29 @@ Seluruh warna, tipografi, radius, dan jarak dikelola secara terpusat di `public/
 
 | Berkas | Tanggung Jawab |
 |---|---|
-| `public/assets/css/tokens.css` | Deklarasi seluruh CSS Custom Properties (warna, tipografi, radius, spasi, shadow). |
+| `public/assets/css/tokens.css` | Deklarasi token desain Dual Theme (`dark` & `light`), alias kompatibilitas lama, dan aturan dasar View Transition. |
 | `public/assets/css/layout.css` | Tata letak makro (Sidebar `248px`, Topbar sticky, Bento Grid tracks, dan drawer mobile `<= 860px`). |
-| `public/assets/css/components.css` | Komponen UI modular (KPI Cards, CSS Bar Chart, Horizontal Timeline Pill Bars, Reason Box, Data Tables, Modals, Banners, Empty States). |
-| `public/assets/js/ui.js` | Interaktivitas murni Vanilla JS (mobile drawer, modal deklaratif `data-open-modal`, populator modal edit tugas, chart interaktif, auto-dismiss flash alert). Bebas ketergantungan `localStorage` untuk data inti. |
+| `public/assets/css/components.css` | Komponen UI modular (KPI Cards, CSS Bar Chart, Horizontal Timeline Pill Bars, Reason Box, Course Cards, Calendar Grid, Finance Tables, Modals, Banners, Empty States). |
+| `public/assets/js/ui.js` | Interaktivitas murni Vanilla JS (Theme Toggle Circular Reveal, mobile drawer, modal deklaratif `data-open-modal`, populator modal edit tugas/kursus/agenda/transaksi, chart interaktif, auto-dismiss flash alert). |
 
 ---
 
-## 4. Katalog Komponen Utama
+## 4. Cakupan Halaman & Template View Modul
 
-1. **Metric KPI Cards (`.kpi-card`):** Menampilkan metrik ringkas (`SKS Semester Ini`, `Tugas Aktif`, `Beban Studi`, `Sisa Anggaran`) lengkap dengan ikon indikator, nilai bold kontras tinggi, pill semantik, atau progress bar.
-2. **Clean CSS Bar Chart (`.bar-chart-wrap`):** Grafik 7 batang vertikal (Sen–Min) murni CSS tanpa library berat, membedakan puncak aktivitas belajar (`#C8F538`), peringatan beban (`#FB923C`), dan hari reguler (`#242933`).
-3. **Horizontal Timeline Pill Bars (`.timeline-list`):** Representasi durasi estimasi tugas dan kedekatan deadline menggunakan batang pil horizontal berwarna Warm Orange (prioritas tinggi) dan Electric Lime (prioritas normal).
-4. **Smart Planner Recommendation Card (`.planner-rec-card`):** Kartu rekomendasi slot belajar dengan border kiri semantik, pill jadwal (`#C8F538`), kotak alasan transparan (`.planner-reason-box`), dan form POST eksplisit untuk persetujuan simpan ke kalender.
-5. **Conflict / Alert Banners (`.alert-banner`) & Friendly Empty States (`.empty-state`):** Setiap halaman wajib menangani pesan umpan balik (sukses, peringatan bentrok/terlambat, gagal) serta tampilan ramah ketika data kosong disertai tombol CTA langsung.
+Seluruh modul telah memiliki template view resmi di folder `views/` yang terintegrasi 100% dengan controller backend:
+
+1. **Dashboard Overview (`views/dashboard/index.php`):** Bento grid 3 baris dengan 4 KPI cards, beban belajar 7 hari (CSS Bar Chart), timeline horizontal penugasan, jadwal kuliah hari ini, serta preview rekomendasi Smart Planner.
+2. **Jadwal Kuliah & Akademik (`views/academic/index.php`):** Ringkasan SKS & mata kuliah aktif, kartu mata kuliah dengan pill warna, matriks jadwal mingguan (Senin–Minggu) anti-bentrok, modal Tambah/Edit Mata Kuliah, dan modal Tambah Jadwal Kuliah.
+3. **Kalender Kegiatan & Agenda (`views/calendar/index.php`):** Navigasi bulan/tahun, matriks grid kalender bulanan dengan indikator dot berwarna (kuliah, agenda, tugas), panel detail agenda hari terpilih, dan modal Tambah/Edit Agenda terintegrasi ConflictService.
+4. **Tugas & Prioritas (`views/tasks/index.php`):** KPI status tugas (total, pending, in-progress, selesai, terlambat), timeline penugasan mendesak, filter status/prioritas, tabel tugas, modal Tambah Tugas, dan modal Edit Tugas.
+5. **Smart Planner (`views/planner/index.php`):** Kontrol rentang analisis (3, 7, 14 hari), KPI preferensi jam belajar, kartu rekomendasi slot belajar dengan kotak alasan (*reason box*), tabel antrean prioritas berbasis skor urgensi deterministik, dan modal pengaturan jam belajar.
+6. **Keuangan Pribadi Mahasiswa (`views/finance/index.php`):** Banner waspada/defisit limit anggaran, 4 KPI finansial (pemasukan, pengeluaran, sisa anggaran, proyeksi akhir bulan), bar progres anggaran bulanan, distribusi per kategori, tabel riwayat transaksi terfilter, modal Catat Transaksi, modal Edit Transaksi, dan modal Atur Batas Anggaran.
+7. **Autentikasi Masuk (`views/auth/login.php`):** Tampilan masuk terpusat dengan logo brand, pesan validasi/flash, form kredensial, dan kartu demo instan.
 
 ---
 
 ## 5. Workflow FigCraft Live Designer (`figcraft-live-designer`)
 
-1. Seluruh pembaruan visual dimulai di kanvas live FigCraft Desktop (`docs/CampusOS-Dashboard.figcraft`) menggunakan tool resmi MCP Server `figcraft`.
+1. Seluruh pembaruan visual bersumber dari kanvas live FigCraft Desktop (`docs/CampusOS-Dashboard.figcraft`) menggunakan tool resmi MCP Server `figcraft`.
 2. **Dilarang keras** membuat skrip `.js` generator manual untuk menulis file `.figcraft`.
 3. Setelah diverifikasi via `screenshot` MCP, token dan komponen disinkronisasikan secara eksplisit ke `public/assets/css/` dan template `views/`.

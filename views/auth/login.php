@@ -23,6 +23,18 @@ $flash = getFlash();
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/components.css">
 
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('campusos-theme');
+        var theme = savedTheme ? savedTheme : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
   <style>
     .auth-shell {
       min-height: 100vh;

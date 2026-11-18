@@ -66,10 +66,23 @@ $headerInfo = $pageHeadings[$currentPage] ?? [
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Modular High-Contrast Dark Mode Stylesheets -->
+  <!-- Modular High-Contrast Dark & Light Mode Stylesheets -->
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/components.css">
+
+  <!-- Anti-flicker Theme Initialization -->
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('campusos-theme');
+        var theme = savedTheme ? savedTheme : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Mobile Drawer Overlay -->
@@ -190,6 +203,24 @@ $headerInfo = $pageHeadings[$currentPage] ?? [
         </div>
 
         <div class="topbar-actions">
+          <button type="button" class="theme-toggle-btn" id="themeToggleBtn" aria-label="Ganti Tema (Gelap/Terang)" title="Ganti Tema">
+            <svg class="ui-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="ui-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="theme-label-text">Tema</span>
+          </button>
+
           <a href="index.php?page=finance" class="btn-secondary">
             <svg class="ui-icon ui-icon-xs" viewBox="0 0 24 24" aria-hidden="true">
               <line x1="12" y1="5" x2="12" y2="19"></line>

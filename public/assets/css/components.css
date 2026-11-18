@@ -1057,3 +1057,339 @@
     align-items: stretch;
   }
 }
+
+/* ==========================================================================
+   13. THEME TOGGLE BUTTON & DUAL THEME CONTROLS
+   ========================================================================== */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.theme-toggle-btn:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.theme-toggle-btn .theme-icon-sun {
+  display: inline-block;
+  color: var(--accent-orange);
+}
+
+.theme-toggle-btn .theme-icon-moon {
+  display: none;
+  color: var(--accent-cyan);
+}
+
+[data-theme="light"] .theme-toggle-btn .theme-icon-sun {
+  display: none;
+}
+
+[data-theme="light"] .theme-toggle-btn .theme-icon-moon {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   14. ACADEMIC MODULE COMPONENTS
+   ========================================================================== */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.course-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.course-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.course-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.course-color-bar {
+  width: 6px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.course-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.course-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.day-schedule-col {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.day-schedule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-subtle);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.day-schedule-item {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-subtle);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.day-schedule-item:hover {
+  border-color: var(--border-strong);
+  background-color: var(--bg-card-hover);
+}
+
+/* ==========================================================================
+   15. CALENDAR & AGENDA COMPONENTS
+   ========================================================================== */
+.calendar-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .calendar-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.calendar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.calendar-month-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  min-width: 160px;
+  text-align: center;
+}
+
+.calendar-grid-table {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-muted);
+  padding: var(--space-2) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calendar-day-cell {
+  aspect-ratio: 1 / 1;
+  min-height: 86px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.calendar-day-cell:hover {
+  background-color: var(--bg-card-hover);
+  border-color: var(--border-strong);
+}
+
+.calendar-day-cell.is-selected {
+  border-color: var(--accent-lime);
+  background-color: var(--accent-lime-soft);
+  box-shadow: 0 0 0 1px var(--accent-lime);
+}
+
+.calendar-day-cell.is-today {
+  border-color: var(--accent-cyan);
+}
+
+.calendar-day-number {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-cell-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.cal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+.cal-dot.is-schedule {
+  background-color: var(--accent-lime);
+}
+
+.cal-dot.is-event {
+  background-color: var(--accent-orange);
+}
+
+.cal-dot.is-task {
+  background-color: var(--accent-cyan);
+}
+
+.agenda-day-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ==========================================================================
+   16. FINANCE MODULE COMPONENTS
+   ========================================================================== */
+.finance-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.finance-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--font-size-sm);
+}
+
+.finance-table th {
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-subtle);
+  background-color: var(--bg-sidebar);
+}
+
+.finance-table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.finance-table tr:hover td {
+  background-color: var(--bg-card-hover);
+}
+
+.amount-income {
+  color: var(--accent-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.amount-expense {
+  color: var(--accent-orange);
+  font-weight: var(--font-weight-bold);
+}
+
+.budget-bar-track {
+  height: 10px;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin: var(--space-2) 0;
+}
+
+.budget-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--accent-lime);
+  transition: width 400ms ease;
+}
+
+.budget-bar-fill.is-warning {
+  background-color: var(--accent-orange);
+}
+
+.budget-bar-fill.is-danger {
+  background-color: var(--accent-danger);
+}
+
