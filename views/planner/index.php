@@ -294,6 +294,7 @@ $idealSess  = (int) ($preferences['preferred_session_hours'] ?? 2);
     </div>
 
     <form method="POST" action="index.php?page=planner">
+      <input type="hidden" name="page" value="planner">
       <div class="modal-body">
         <div class="form-grid-2">
           <div class="form-group">

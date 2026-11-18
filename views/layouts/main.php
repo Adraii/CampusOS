@@ -282,6 +282,8 @@ $headerInfo = $pageHeadings[$currentPage] ?? [
         <button type="button" class="modal-close-btn" data-close-modal="quickTaskModal" aria-label="Tutup">&times;</button>
       </div>
       <form method="POST" action="index.php?page=tasks&action=store">
+        <input type="hidden" name="page" value="tasks">
+        <input type="hidden" name="action" value="store">
         <div class="modal-body">
           <div class="form-group">
             <label for="quickTaskTitle" class="form-label">Judul Tugas *</label>

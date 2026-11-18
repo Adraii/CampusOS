@@ -309,6 +309,8 @@ $budgetBarClass = $isOverBudget ? 'is-danger' : ($isNearLimit ? 'is-warning' : '
                     ✏️
                   </button>
                   <form method="POST" action="index.php?page=finance&action=delete_transaction&month=<?= e($currentMonth) ?>" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan transaksi ini?');" style="margin:0;">
+                    <input type="hidden" name="page" value="finance">
+                    <input type="hidden" name="action" value="delete_transaction">
                     <input type="hidden" name="id" value="<?= (int) $tx['id'] ?>">
                     <button type="submit" class="btn-ghost-icon" title="Hapus Transaksi" style="width: 26px; height: 26px; color: var(--accent-danger);">
                       &times;
@@ -337,6 +339,8 @@ $budgetBarClass = $isOverBudget ? 'is-danger' : ($isNearLimit ? 'is-warning' : '
       <button type="button" class="modal-close-btn" data-close-modal="transactionCreateModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=finance&action=store_transaction">
+      <input type="hidden" name="page" value="finance">
+      <input type="hidden" name="action" value="store_transaction">
       <div class="modal-body">
         <div class="form-grid-2">
           <div class="form-group">
@@ -401,6 +405,8 @@ $budgetBarClass = $isOverBudget ? 'is-danger' : ($isNearLimit ? 'is-warning' : '
       <button type="button" class="modal-close-btn" data-close-modal="transactionEditModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=finance&action=update_transaction">
+      <input type="hidden" name="page" value="finance">
+      <input type="hidden" name="action" value="update_transaction">
       <input type="hidden" name="id" id="editTxId">
       <div class="modal-body">
         <div class="form-grid-2">
@@ -454,6 +460,8 @@ $budgetBarClass = $isOverBudget ? 'is-danger' : ($isNearLimit ? 'is-warning' : '
       <button type="button" class="modal-close-btn" data-close-modal="budgetSettingsModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=finance&action=save_budget">
+      <input type="hidden" name="page" value="finance">
+      <input type="hidden" name="action" value="save_budget">
       <input type="hidden" name="month" value="<?= e($currentMonth) ?>">
       <div class="modal-body">
         <div class="form-group">

@@ -248,6 +248,8 @@ $categoryLabels = [
                   Edit
                 </button>
                 <form method="POST" action="index.php?page=calendar&action=delete_event&date=<?= e($selectedDate) ?>" onsubmit="return confirm('Apakah Anda yakin ingin menghapus agenda <?= e(addslashes($ev['title'])) ?>?');" style="margin:0;">
+                  <input type="hidden" name="page" value="calendar">
+                  <input type="hidden" name="action" value="delete_event">
                   <input type="hidden" name="id" value="<?= (int) $ev['id'] ?>">
                   <button type="submit" class="btn-danger-ghost" style="padding: 3px 8px; font-size: var(--font-size-2xs);">Hapus</button>
                 </form>
@@ -299,6 +301,8 @@ $categoryLabels = [
       <button type="button" class="modal-close-btn" data-close-modal="eventCreateModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=calendar&action=store_event">
+      <input type="hidden" name="page" value="calendar">
+      <input type="hidden" name="action" value="store_event">
       <div class="modal-body">
         <div class="form-group">
           <label for="createEventTitle" class="form-label">Judul Agenda / Acara *</label>
@@ -363,6 +367,8 @@ $categoryLabels = [
       <button type="button" class="modal-close-btn" data-close-modal="eventEditModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=calendar&action=update_event">
+      <input type="hidden" name="page" value="calendar">
+      <input type="hidden" name="action" value="update_event">
       <input type="hidden" name="id" id="editEventId">
       <div class="modal-body">
         <div class="form-group">

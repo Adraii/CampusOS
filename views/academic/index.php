@@ -183,6 +183,8 @@ $dayNames = [
             Edit
           </button>
           <form method="POST" action="index.php?page=academic&action=delete_course" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata kuliah <?= e(addslashes($c['course_name'])) ?>? Seluruh jadwal terkait juga akan dihapus.');" style="display:inline;">
+            <input type="hidden" name="page" value="academic">
+            <input type="hidden" name="action" value="delete_course">
             <input type="hidden" name="id" value="<?= (int) $c['id'] ?>">
             <button type="submit" class="btn-danger-ghost">Hapus</button>
           </form>
@@ -249,6 +251,8 @@ $dayNames = [
                       <?= e(substr($s['start_time'], 0, 5)) ?> - <?= e(substr($s['end_time'], 0, 5)) ?>
                     </span>
                     <form method="POST" action="index.php?page=academic&action=delete_schedule" onsubmit="return confirm('Hapus jadwal kuliah ini?');" style="margin:0;">
+                      <input type="hidden" name="page" value="academic">
+                      <input type="hidden" name="action" value="delete_schedule">
                       <input type="hidden" name="id" value="<?= (int) $s['id'] ?>">
                       <button type="submit" class="btn-ghost-icon" title="Hapus Jadwal" style="width: 22px; height: 22px; font-size: 0.75rem;">&times;</button>
                     </form>
@@ -285,6 +289,8 @@ $dayNames = [
       <button type="button" class="modal-close-btn" data-close-modal="courseCreateModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=academic&action=create_course">
+      <input type="hidden" name="page" value="academic">
+      <input type="hidden" name="action" value="create_course">
       <div class="modal-body">
         <div class="form-grid-2">
           <div class="form-group">
@@ -333,6 +339,8 @@ $dayNames = [
       <button type="button" class="modal-close-btn" data-close-modal="courseEditModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=academic&action=edit_course">
+      <input type="hidden" name="page" value="academic">
+      <input type="hidden" name="action" value="edit_course">
       <input type="hidden" name="id" id="editCourseId">
       <div class="modal-body">
         <div class="form-grid-2">
@@ -382,6 +390,8 @@ $dayNames = [
       <button type="button" class="modal-close-btn" data-close-modal="scheduleCreateModal" aria-label="Tutup">&times;</button>
     </div>
     <form method="POST" action="index.php?page=academic&action=create_schedule">
+      <input type="hidden" name="page" value="academic">
+      <input type="hidden" name="action" value="create_schedule">
       <div class="modal-body">
         <div class="form-group">
           <label for="createSchedCourseId" class="form-label">Pilih Mata Kuliah *</label>

@@ -11,9 +11,9 @@ require_once __DIR__ . '/../app/helpers/view.php';
 // Inisialisasi Sesi Pengguna
 startSessionSafe();
 
-// Baca parameter rute
-$page   = $_GET['page'] ?? 'dashboard';
-$action = $_GET['action'] ?? 'index';
+// Baca parameter rute (mendukung GET dan POST fallback)
+$page   = $_GET['page'] ?? ($_POST['page'] ?? 'dashboard');
+$action = $_GET['action'] ?? ($_POST['action'] ?? 'index');
 
 // ========================================================
 // 1. Rute Publik (Authentication Flow)

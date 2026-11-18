@@ -409,6 +409,8 @@ $overdueTasks    = (int) ($counts['overdue'] ?? 0);
     </div>
 
     <form method="POST" action="index.php?page=tasks&action=store">
+      <input type="hidden" name="page" value="tasks">
+      <input type="hidden" name="action" value="store">
       <div class="modal-body">
         <div class="form-group">
           <label for="createTaskTitle" class="form-label">Judul Tugas *</label>
@@ -488,6 +490,8 @@ $overdueTasks    = (int) ($counts['overdue'] ?? 0);
     </div>
 
     <form method="POST" action="index.php?page=tasks&action=update" id="taskEditForm">
+      <input type="hidden" name="page" value="tasks">
+      <input type="hidden" name="action" value="update">
       <input type="hidden" name="id" id="editTaskId" value="">
       <div class="modal-body">
         <div class="form-group">
