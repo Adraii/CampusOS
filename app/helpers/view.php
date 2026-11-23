@@ -64,9 +64,7 @@ function renderView(string $viewPath, array $data = [], ?string $layout = 'layou
  */
 function setFlash(string $type, string $message): void
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+    startSessionSafe();
     $_SESSION['flash'] = [
         'type'    => $type,
         'message' => $message,
@@ -80,9 +78,7 @@ function setFlash(string $type, string $message): void
  */
 function getFlash(): ?array
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+    startSessionSafe();
     if (!empty($_SESSION['flash'])) {
         $flash = $_SESSION['flash'];
         unset($_SESSION['flash']);

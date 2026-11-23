@@ -187,10 +187,12 @@ class FinanceModel
                 $amount = (float) $row['total_amount'];
                 $pct = $totalAll > 0 ? round(($amount / $totalAll) * 100, 1) : 0.0;
                 $result[] = [
-                    'category'   => $row['category'],
-                    'amount'     => $amount,
-                    'percentage' => $pct,
-                    'count'      => (int) $row['count'],
+                    'category'          => $row['category'],
+                    'amount'            => $amount,
+                    'total_amount'      => $amount,
+                    'percentage'        => $pct,
+                    'count'             => (int) $row['count'],
+                    'transaction_count' => (int) $row['count'],
                 ];
             }
 

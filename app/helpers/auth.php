@@ -8,10 +8,11 @@
 function startSessionSafe(): void
 {
     if (session_status() === PHP_SESSION_NONE) {
-        // Keamanan cookie session
-        ini_set('session.cookie_httponly', 1);
-        ini_set('session.use_only_cookies', 1);
-        session_start();
+        if (!headers_sent()) {
+            @ini_set('session.cookie_httponly', '1');
+            @ini_set('session.use_only_cookies', '1');
+            @session_start();
+        }
     }
 }
 

@@ -104,6 +104,7 @@ class SmartPlannerService
             $task['urgency_score']   = $score;
             $task['remaining_hours'] = round($remainingHours, 1);
             $task['is_overdue']      = ($remainingHours <= 0);
+            $task['course_name']     = !empty($task['course_name']) ? $task['course_name'] : 'Umum';
 
             $ranked[] = $task;
         }

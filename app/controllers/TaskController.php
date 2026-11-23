@@ -28,8 +28,8 @@ class TaskController
         $this->db = $db ?? getDBConnection();
         $this->taskModel = new TaskModel($this->db);
         $this->eventModel = new EventModel($this->db);
-        $this->courseModel = new CourseModel();
-        $this->scheduleModel = new ScheduleModel();
+        $this->courseModel = new CourseModel($this->db);
+        $this->scheduleModel = new ScheduleModel($this->db);
         $this->conflictService = new ConflictService($this->db);
         $this->smartPlannerService = new SmartPlannerService($this->db, $this->taskModel);
     }
