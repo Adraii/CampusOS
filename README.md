@@ -1,5 +1,6 @@
 # CampusOS — Web-Based Student Assistant
 
+[![CampusOS CI](https://github.com/Adraii/CampusOS/actions/workflows/ci.yml/badge.svg)](https://github.com/Adraii/CampusOS/actions/workflows/ci.yml)
 [![PHP Version](https://img.shields.io/badge/PHP-8.1%2B-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![Database](https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Architecture](https://img.shields.io/badge/Architecture-MVC%20%2B%20Services-10B981?style=flat)](#arsitektur--tech-stack)
@@ -226,7 +227,7 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan CampusOS di lingkungan loka
 Buka terminal (Laragon Terminal atau PowerShell) dan arahkan ke direktori web root Laragon (`C:\laragon\www`), lalu lakukan *clone*:
 ```bash
 cd C:\laragon\www
-git clone https://github.com/<username>/CampusOS.git
+git clone https://github.com/Adraii/CampusOS.git
 cd CampusOS
 ```
 
@@ -236,19 +237,19 @@ cd CampusOS
 
 ### 4. Buat Basis Data & Impor Skema
 Buka database manager bawaan Laragon (**HeidiSQL**) atau **phpMyAdmin** (`http://localhost/phpmyadmin`), kemudian:
-1. Buat basis data baru bernama `campus_os` (atau `campusos_db`):
+1. Buat basis data baru bernama `campusos_db`:
    ```sql
-   CREATE DATABASE `campus_os` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE `campusos_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
    ```
-2. Pilih database `campus_os`, lalu impor file skema tabel secara berurutan:
+2. Pilih database `campusos_db`, lalu impor file skema tabel secara berurutan:
    - Impor skema: [`database/schema.sql`](database/schema.sql)
    - Impor data awal demo: [`database/seed.sql`](database/seed.sql)
 
 > [!TIP]
 > Jika menggunakan command prompt / terminal Laragon, impor dapat dijalankan langsung via CLI:
 > ```bash
-> mysql -u root -p campus_os < database/schema.sql
-> mysql -u root -p campus_os < database/seed.sql
+> mysql -u root -p campusos_db < database/schema.sql
+> mysql -u root -p campusos_db < database/seed.sql
 > ```
 
 ### 5. Konfigurasi Lingkungan Lokal
@@ -261,7 +262,7 @@ Buat berkas konfigurasi lokal di `app/config/config.local.php` (berkas ini diaba
 return [
     'db' => [
         'host'     => '127.0.0.1',
-        'dbname'   => 'campus_os',
+        'dbname'   => 'campusos_db',
         'username' => 'root',
         'password' => '',
         'charset'  => 'utf8mb4',

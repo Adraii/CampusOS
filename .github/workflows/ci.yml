@@ -1,0 +1,53 @@
+name: CampusOS CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-hygiene:
+    name: PHP Lint, Security & Hygiene Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: none
+
+      - name: Verify PHP Version
+        run: php -v
+
+      - name: Run PHP Syntax Linter across app, public, and views
+        run: |
+          find app public views -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Security & Hygiene Check (Sensitive Files & Dangerous Functions)
+        run: |
+          if git ls-files --error-unmatch app/config/config.local.php >/dev/null 2>&1; then
+            echo "ERROR: app/config/config.local.php must NOT be tracked in Git!"
+            exit 1
+          fi
+          echo "OK: app/config/config.local.php is not tracked in Git."
+
+          if grep -rnE "eval\(|shell_exec\(" app/ public/ views/; then
+            echo "ERROR: Dangerous functions (eval or shell_exec) detected in codebase!"
+            exit 1
+          fi
+          echo "OK: No dangerous functions (eval/shell_exec) found."
+
+      - name: Verify Required Schema & Documentation Files
+        run: |
+          for file in database/schema.sql database/seed.sql README.md; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Required file '$file' is missing!"
+              exit 1
+            fi
+            echo "OK: Found $file"
+          done
